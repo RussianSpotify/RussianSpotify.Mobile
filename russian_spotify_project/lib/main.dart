@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:russian_spotify_project/presentation/navigation/app_router.dart';
 import 'package:russian_spotify_project/presentation/viewmodels/settings_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/views/settings_view.dart';
 
 import 'core/di/locator.dart';
 import 'core/utils/app_routes.dart';

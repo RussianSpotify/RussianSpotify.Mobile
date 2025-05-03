@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../../presentation/widgets/personal_settings.dart';
 import '../entities/settings_entity.dart';
 
