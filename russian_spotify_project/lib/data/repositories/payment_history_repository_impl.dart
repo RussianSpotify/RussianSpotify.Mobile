@@ -10,13 +10,11 @@ class PaymentHistoryRepositoryImpl implements PaymentHistoryRepository {
         id: 1,
         amount: 100.0,
         date: DateTime.now().subtract(Duration(days: 1)),
-        status: 'Completed',
       ),
       PaymentHistoryEntity(
         id: 2,
         amount: 50.0,
         date: DateTime.now().subtract(Duration(days: 3)),
-        status: 'Failed',
       ),
     ];
   }

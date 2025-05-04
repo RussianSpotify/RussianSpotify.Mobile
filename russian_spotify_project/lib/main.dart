@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:russian_spotify_project/presentation/navigation/app_router.dart';
 import 'package:russian_spotify_project/presentation/viewmodels/about_viewmodel.dart';
+import 'package:russian_spotify_project/presentation/viewmodels/payment_history_viewmodel.dart';
 import 'package:russian_spotify_project/presentation/viewmodels/settings_viewmodel.dart';
 import 'package:russian_spotify_project/presentation/viewmodels/subscription_viewmodel.dart';
 
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AboutViewModel>(
           create: (_) => locator<AboutViewModel>(),
         ),
+        ChangeNotifierProvider<PaymentHistoryViewModel>(
+          create: (_) => locator<PaymentHistoryViewModel>(),
+        ),
       ],
       child: MaterialApp(
         title: 'Spotify',
@@ -37,7 +41,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
         onGenerateRoute: AppRouter.generateRoute,
-        initialRoute: AppRoutes.subscription,
+        initialRoute: AppRoutes.paymentHistory,
       ),
     );
   }
