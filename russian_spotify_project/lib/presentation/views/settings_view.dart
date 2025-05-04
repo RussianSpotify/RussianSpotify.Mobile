@@ -7,11 +7,13 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<SettingsViewModel>();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Expanded(child: viewModel.selectedPage.component)],
+    return Consumer<SettingsViewModel>(
+      builder: (context, viewModel, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [Expanded(child: viewModel.selectedPage.component)],
+        );
+      },
     );
   }
 }

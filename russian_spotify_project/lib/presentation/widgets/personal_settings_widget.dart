@@ -41,9 +41,15 @@ class PersonalSettingsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => _showEditDialog(context),
-              child: const Text("Edit your info"),
+            Center(
+              child: ElevatedButton(
+                onPressed: () => _showEditDialog(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text("Edit your info"),
+              ),
             ),
           ],
         ),
@@ -119,8 +125,20 @@ class UserInfoTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(text, style: textStyle ?? DefaultTextStyle.of(context).style),
-          Text(value, style: textStyle ?? DefaultTextStyle.of(context).style),
+          Text(
+            text,
+            style:
+                textStyle?.copyWith(fontWeight: FontWeight.bold) ??
+                DefaultTextStyle.of(context).style,
+          ),
+          Text(
+            value,
+            style:
+                textStyle?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.75),
+                ) ??
+                DefaultTextStyle.of(context).style,
+          ),
         ],
       ),
     );

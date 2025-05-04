@@ -4,17 +4,24 @@ import '../../domain/usecases/get_settings_usecase.dart';
 
 class SettingsViewModel extends ChangeNotifier {
   final GetSettingsUseCase _getSettingsUseCase;
-
-  SettingsViewModel(this._getSettingsUseCase) {
-    _settingsPages = _getSettingsUseCase.call();
-  }
-
   late List<SettingsEntity> _settingsPages;
   int _selectedPageId = 0;
 
-  // 💡 Простая модель данных пользователя
   String _username = 'demo_user';
   String _email = 'demo@example.com';
+
+  SettingsViewModel(this._getSettingsUseCase) {
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    try {
+      _settingsPages = await _getSettingsUseCase.call();
+      notifyListeners();
+    } catch (e) {
+      _settingsPages = [];
+    }
+  }
 
   List<SettingsEntity> get settingsPages => _settingsPages;
 
@@ -23,11 +30,9 @@ class SettingsViewModel extends ChangeNotifier {
   SettingsEntity get selectedPage =>
       _settingsPages.firstWhere((e) => e.id == _selectedPageId);
 
-  // ✅ Добавляем нужные геттеры
   String get username => _username;
   String get email => _email;
 
-  // ✅ Метод обновления данных пользователя
   void updateUserInfo(String newUsername, String newEmail) {
     _username = newUsername;
     _email = newEmail;
