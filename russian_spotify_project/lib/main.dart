@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
         title: 'Settings App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
         onGenerateRoute: AppRouter.generateRoute,
-        initialRoute: AppRoutes.settings,
+        initialRoute: AppRoutes.about,
       ),
     );
   }

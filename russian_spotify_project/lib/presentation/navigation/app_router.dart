@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:russian_spotify_project/presentation/views/about_view.dart';
 import '../../core/utils/app_routes.dart';
 import '../views/settings_view.dart';
 
@@ -7,6 +8,8 @@ class AppRouter {
     switch (settings.name) {
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsView());
+      case AppRoutes.about:
+        return MaterialPageRoute(builder: (_) => const AboutView());
       default:
         return MaterialPageRoute(
           builder:

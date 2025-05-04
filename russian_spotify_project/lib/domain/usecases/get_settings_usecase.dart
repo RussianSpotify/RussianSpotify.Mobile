@@ -1,4 +1,4 @@
-import '../../presentation/widgets/personal_settings.dart';
+import '../../presentation/widgets/personal_settings_widget.dart';
 import '../entities/settings_entity.dart';
 
 abstract class GetSettingsUseCase {
@@ -12,7 +12,7 @@ class GetSettingsUseCaseImpl implements GetSettingsUseCase {
       SettingsEntity(
         id: 0,
         name: 'Personal',
-        component: const PersonalSettings(),
+        component: const PersonalSettingsWidget(),
       ),
     ];
   }

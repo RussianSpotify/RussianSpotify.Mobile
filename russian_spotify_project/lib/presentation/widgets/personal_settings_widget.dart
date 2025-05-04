@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../viewmodels/settings_viewmodel.dart';
 
-class PersonalSettings extends StatelessWidget {
-  const PersonalSettings({super.key});
+class PersonalSettingsWidget extends StatelessWidget {
+  const PersonalSettingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
