@@ -7,6 +7,7 @@ import 'package:russian_spotify_project/presentation/viewmodels/settings_viewmod
 import 'package:russian_spotify_project/presentation/viewmodels/subscription_viewmodel.dart';
 
 import 'core/di/locator.dart';
+import 'presentation/navigation/app_router.dart';
 import 'core/utils/app_routes.dart';
 
 void main() {
@@ -40,8 +41,8 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
+        initialRoute: AppRoutes.home,
         onGenerateRoute: AppRouter.generateRoute,
-        initialRoute: AppRoutes.paymentHistory,
       ),
     );
   }

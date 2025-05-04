@@ -3,11 +3,14 @@ import 'package:russian_spotify_project/presentation/views/about_view.dart';
 import 'package:russian_spotify_project/presentation/views/payment_history_view.dart';
 import 'package:russian_spotify_project/presentation/views/subscription_view.dart';
 import '../../core/utils/app_routes.dart';
+import '../views/home_screen.dart';
 import '../views/settings_view.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.home:
+        return MaterialPageRoute(builder: (_) => HomeScreen());
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsView());
       case AppRoutes.about:
