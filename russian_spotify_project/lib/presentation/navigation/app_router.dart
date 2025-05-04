@@ -1,27 +1,21 @@
-// lib/presentation/navigation/app_router.dart
-
 import 'package:flutter/material.dart';
+import 'package:russian_spotify_project/presentation/views/about_view.dart';
+import 'package:russian_spotify_project/presentation/views/payment_history_view.dart';
+import 'package:russian_spotify_project/presentation/views/subscription_view.dart';
 import '../../core/utils/app_routes.dart';
-import '../views/home_screen.dart';
-import '../views/details_screen.dart';
-import '../views/settings_screen.dart';
+import '../views/settings_view.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case AppRoutes.home:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
-      case AppRoutes.details:
-        final args = settings.arguments as Map<String, dynamic>?;
-        return MaterialPageRoute(
-          builder:
-              (_) => DetailsScreen(
-                title: args?['title'] ?? 'No Title',
-                description: args?['description'] ?? 'No Description',
-              ),
-        );
       case AppRoutes.settings:
-        return MaterialPageRoute(builder: (_) => const SettingsScreen());
+        return MaterialPageRoute(builder: (_) => const SettingsView());
+      case AppRoutes.about:
+        return MaterialPageRoute(builder: (_) => const AboutView());
+      case AppRoutes.subscription:
+        return MaterialPageRoute(builder: (_) => const SubscriptionView());
+      case AppRoutes.paymentHistory:
+        return MaterialPageRoute(builder: (_) => const PaymentHistoryView());
       default:
         return MaterialPageRoute(
           builder:
