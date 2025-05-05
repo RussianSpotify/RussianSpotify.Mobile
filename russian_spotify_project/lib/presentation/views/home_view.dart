@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:russian_spotify_project/core/utils/albums_mock.dart';
+import 'package:russian_spotify_project/core/utils/mock/albums_mock.dart';
 
 import 'layout/main_scaffold.dart';
 
@@ -17,14 +17,19 @@ class HomeView extends StatelessWidget {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
+      body: Container(
+        color: Colors.black, // Устанавливаем черный фон
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Добрый день, Ирек!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              'Hello, Irek!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white, // Белый цвет текста
+              ),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -33,6 +38,7 @@ class HomeView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final album = albumsMock[index];
                   return Card(
+                    color: Colors.grey.withValues(alpha: 0.1),
                     elevation: 6,
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     shape: RoundedRectangleBorder(
@@ -52,16 +58,20 @@ class HomeView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                album['title']!,
+                                album.title,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white, // Белый цвет текста
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                album['artist']!,
-                                style: const TextStyle(fontSize: 14),
+                                album.artist,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white, // Белый цвет текста
+                                ),
                               ),
                             ],
                           ),

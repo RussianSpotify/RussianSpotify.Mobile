@@ -1,6 +1,5 @@
 class AppRoutes {
   static const String home = '/';
-  static const String details = '/details';
   static const String settings = '/settings';
   static const String about = '/about';
   static const String subscription = '/subscription';
@@ -11,4 +10,5 @@ class AppRoutes {
   static const String resetPassword = '/reset-password';
   static const String search = '/search';
   static const String myLibrary = '/my-library';
+  static const String profile = '/profile';
 }

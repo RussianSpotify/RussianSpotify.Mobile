@@ -29,12 +29,10 @@ class RegisterViewModel extends ChangeNotifier {
   // Обновление данных пользователя
   void updateUsername(String value) {
     username = value;
-    notifyListeners();
   }
 
   void updateEmail(String value) {
     email = value;
-    notifyListeners();
   }
 
   void updatePassword(String value) {
@@ -49,7 +47,6 @@ class RegisterViewModel extends ChangeNotifier {
 
   void toggleRole(bool value) {
     isAuthor = value;
-    notifyListeners();
   }
 
   Future<void> register(BuildContext context) async {

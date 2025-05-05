@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:russian_spotify_project/presentation/views/layout/main_scaffold.dart';
 
 import '../viewmodels/settings_viewmodel.dart';
 
@@ -10,13 +11,13 @@ class PersonalSettingsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SettingsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Color(0xFF120F0F),
+    return MainScaffold(
       appBar: AppBar(
         title: const Text('Personal Settings'),
         backgroundColor: Colors.purple,
       ),
-      body: Padding(
+      body: Container(
+        color: Colors.black, // Устанавливаем чёрный фон для всего тела страницы
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,24 +68,40 @@ class PersonalSettingsWidget extends StatelessWidget {
       context: context,
       builder:
           (_) => AlertDialog(
-            title: const Text("Edit Info"),
+            title: const Text(
+              "Edit Info",
+              style: TextStyle(color: Colors.white),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
+                  style: TextStyle(color: Colors.white),
                   controller: usernameController,
-                  decoration: const InputDecoration(labelText: "Username"),
+                  decoration: const InputDecoration(
+                    labelText: "Username",
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
                 ),
                 TextField(
+                  style: TextStyle(color: Colors.white),
                   controller: emailController,
-                  decoration: const InputDecoration(labelText: "Email"),
+                  decoration: const InputDecoration(
+                    labelText: "Email",
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
                 ),
                 TextField(
+                  style: TextStyle(color: Colors.white),
                   controller: passwordController,
-                  decoration: const InputDecoration(labelText: "Password"),
+                  decoration: const InputDecoration(
+                    labelText: "Password",
+                    labelStyle: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),
+            backgroundColor: Color(0xFF300B44),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -121,6 +138,7 @@ class UserInfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.black,
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
