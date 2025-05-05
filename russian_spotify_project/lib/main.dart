@@ -7,7 +7,6 @@ import 'package:russian_spotify_project/presentation/viewmodels/settings_viewmod
 import 'package:russian_spotify_project/presentation/viewmodels/subscription_viewmodel.dart';
 
 import 'core/di/locator.dart';
-import 'presentation/navigation/app_router.dart';
 import 'core/utils/app_routes.dart';
 
 void main() {

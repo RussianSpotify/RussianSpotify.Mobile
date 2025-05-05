@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/core/utils/albums_mock.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +33,11 @@ class HomeScreen extends StatelessWidget {
               leading: const Icon(Icons.home),
               title: const Text('Home'),
               onTap: () {
-                Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  '/',
+                  (route) => false,
+                );
               },
             ),
             ListTile(
@@ -58,17 +64,14 @@ class HomeScreen extends StatelessWidget {
           children: [
             const Text(
               'Добрый день, Ирек!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: albums_mock.length,
+                itemCount: albumsMuck.length,
                 itemBuilder: (context, index) {
-                  final album = albums_mock[index];
+                  final album = albumsMuck[index];
                   return Card(
                     elevation: 6,
                     margin: const EdgeInsets.symmetric(vertical: 10),
