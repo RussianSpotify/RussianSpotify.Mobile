@@ -5,4 +5,5 @@ class AppRoutes {
   static const String about = '/about';
   static const String subscription = '/subscription';
   static const String paymentHistory = '/payment-history';
+  static const String search = '/search';
 }
