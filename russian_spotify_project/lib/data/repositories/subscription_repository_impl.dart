@@ -1,6 +1,5 @@
-import 'package:russian_spotify_project/domain/entities/subscription_option_entity.dart';
-
-import '../../domain/interfaces/subcription_repository.dart';
+import '../../domain/entities/subscription_option_entity.dart';
+import '../../domain/interfaces/subscription_repository.dart';
 
 class SubscriptionRepositoryImpl implements SubscriptionRepository {
   @override

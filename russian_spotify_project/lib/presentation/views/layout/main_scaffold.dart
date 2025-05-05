@@ -80,6 +80,13 @@ class MainScaffold extends StatelessWidget {
                 Navigator.pushNamed(context, AppRoutes.about);
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Leave'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.login);
+              },
+            ),
           ],
         ),
       ),

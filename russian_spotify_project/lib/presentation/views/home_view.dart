@@ -17,7 +17,6 @@ class HomeView extends StatelessWidget {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

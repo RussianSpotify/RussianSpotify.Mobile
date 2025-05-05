@@ -1,5 +1,5 @@
 import '../entities/subscription_option_entity.dart';
-import '../interfaces/subcription_repository.dart';
+import '../interfaces/subscription_repository.dart';
 
 class GetSubscriptionOptionsUseCase {
   final SubscriptionRepository repository;
