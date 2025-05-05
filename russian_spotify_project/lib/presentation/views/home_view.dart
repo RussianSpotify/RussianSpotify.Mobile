@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/core/utils/albums_mock.dart';
 import 'package:russian_spotify_project/core/utils/app_routes.dart';
 
+import 'layout/main_scaffold.dart';
+
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+    return MainScaffold(
+            appBar: AppBar(
         backgroundColor: Colors.purple,
         title: const Text(
           'Russian Spotify',
@@ -21,7 +23,7 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             Container(
-              height: 100, // уменьшаем высоту
+              height: 100,
               color: Colors.purple,
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -79,14 +81,17 @@ class HomeView extends StatelessWidget {
           children: [
             const Text(
               'Добрый день, Ирек!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: albumsMuck.length,
+                itemCount: albumsMock.length,
                 itemBuilder: (context, index) {
-                  final album = albumsMuck[index];
+                  final album = albumsMock[index];
                   return Card(
                     elevation: 6,
                     margin: const EdgeInsets.symmetric(vertical: 10),
@@ -97,7 +102,7 @@ class HomeView extends StatelessWidget {
                       padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          Icon(Icons.album, size: 50, color: Colors.purple),
+                          const Icon(Icons.album, size: 50, color: Colors.purple),
                           const SizedBox(width: 20),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
