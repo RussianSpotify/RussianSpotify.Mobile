@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/core/utils/albums_mock.dart';
+import 'package:russian_spotify_project/core/utils/app_routes.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class HomeScreen extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
-                  '/',
+                  AppRoutes.home,
                   (route) => false,
                 );
               },
@@ -44,14 +45,28 @@ class HomeScreen extends StatelessWidget {
               leading: const Icon(Icons.search),
               title: const Text('Search'),
               onTap: () {
-                Navigator.pushNamed(context, '/search');
+                Navigator.pushNamed(context, AppRoutes.search);
               },
             ),
             ListTile(
               leading: const Icon(Icons.library_music),
               title: const Text('Your Library'),
               onTap: () {
-                Navigator.pushNamed(context, '/library');
+                Navigator.pushNamed(context, AppRoutes.myLibrary);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.settings);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About us'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.about);
               },
             ),
           ],
