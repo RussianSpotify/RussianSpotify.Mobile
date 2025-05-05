@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/presentation/views/about_view.dart';
 import 'package:russian_spotify_project/presentation/views/confirmation_view.dart';
 import 'package:russian_spotify_project/presentation/views/payment_history_view.dart';
+import 'package:russian_spotify_project/presentation/views/playlist_view.dart';
 import 'package:russian_spotify_project/presentation/views/register_view.dart';
 import 'package:russian_spotify_project/presentation/views/reset_password_view.dart';
 import 'package:russian_spotify_project/presentation/views/search_view.dart';
@@ -10,6 +11,7 @@ import '../../core/utils/app_routes.dart';
 import '../views/home_view.dart';
 import '../views/login_view.dart';
 import '../views/settings_view.dart';
+import '../views/user_profile_view.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -34,6 +36,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ResetPasswordView());
       case AppRoutes.search:
         return MaterialPageRoute(builder: (_) => const SearchView());
+      case AppRoutes.myLibrary:
+        return MaterialPageRoute(builder: (_) => const PlaylistView());
+      case AppRoutes.profile:
+        return MaterialPageRoute(builder: (_) => const UserProfileView());
       default:
         return MaterialPageRoute(
           builder:
