@@ -5,7 +5,7 @@ class ResetPasswordUseCase {
 
   ResetPasswordUseCase(this.repository);
 
-  Future<String> resetPassword(String email) async {
+  Future<bool> resetPassword(String email) async {
     return await repository.resetPassword(email);
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../core/utils/app_routes.dart';
 import '../../viewmodels/register_viewmodel.dart';
 
 class RegisterWidget extends StatelessWidget {
@@ -83,31 +82,7 @@ class RegisterWidget extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               foregroundColor: Colors.purple, // Цвет текста кнопки
             ),
-            onPressed: () async {
-              await viewModel.register();
-              if (!context.mounted) return;
-
-              if (viewModel.isRegistered) {
-                Navigator.pushNamed(context, AppRoutes.home);
-              } else {
-                showDialog(
-                  context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: const Text('Error'),
-                        content: Text(viewModel.errorMessage),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      ),
-                );
-              }
-            },
+            onPressed: () async => await viewModel.register(context),
             child: const Text(
               'Sign Up',
               style: TextStyle(fontWeight: FontWeight.bold),

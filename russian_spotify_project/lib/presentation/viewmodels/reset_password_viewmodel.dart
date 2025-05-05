@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:russian_spotify_project/core/utils/confirm_operations_constants.dart';
 import 'package:russian_spotify_project/domain/usecases/reset_password_usecase.dart';
 
 import '../../core/utils/app_routes.dart';
@@ -40,19 +41,28 @@ class ResetPasswordViewModel extends ChangeNotifier {
   }
 
   Future<void> resetPassword(BuildContext context) async {
-    final confirmationCode = await _resetPasswordUseCase.resetPassword(email);
+    final success = await _resetPasswordUseCase.resetPassword(email);
+
     if (context.mounted) {
-      _showMessage(context, 'Success', 'Operation completed successfully!');
-      Navigator.pushNamed(
-        context,
-        AppRoutes.login,
-        arguments: {
-          'email': email,
-          'newPassword': newPassword,
-          'confirmPassword': confirmPassword,
-          'confirmationCode': confirmationCode,
-        },
-      );
+      if (success) {
+        _showMessage(context, 'Success', 'Operation completed successfully!');
+        Navigator.pushNamed(
+          context,
+          AppRoutes.confirmation,
+          arguments: {
+            'email': email,
+            'newPassword': newPassword,
+            'confirmPassword': confirmPassword,
+            'operation': ConfirmOperationsConstants.resetPassword,
+          },
+        );
+      } else {
+        _showMessage(
+          context,
+          'Error',
+          'Что-то пошло не так. Попробуйте снова.',
+        );
+      }
     }
   }
 

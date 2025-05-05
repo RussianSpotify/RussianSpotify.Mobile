@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:russian_spotify_project/core/utils/confirm_operations_constants.dart';
+import '../../core/utils/app_routes.dart';
 import '../../domain/usecases/register_usecase.dart';
 
 class RegisterViewModel extends ChangeNotifier {
@@ -50,25 +52,24 @@ class RegisterViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Логика регистрации
-  Future<bool> register() async {
+  Future<void> register(BuildContext context) async {
     if (!passwordsMatch) {
-      errorMessage = "Passwords don't match";
-      notifyListeners();
-      return false;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Passwords don't match")));
+      return;
     }
 
     if (!isEmailValid) {
-      errorMessage = "Please enter a valid email address";
-      notifyListeners();
-      return false;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Invalid email address")));
+      return;
     }
 
-    // Устанавливаем флаг загрузки
     isLoading = true;
     notifyListeners();
 
-    // Пытаемся зарегистрировать пользователя
     bool success = await _registerUseCase.call(
       username,
       email,
@@ -77,18 +78,32 @@ class RegisterViewModel extends ChangeNotifier {
       isAuthor ? 'Автор' : 'Пользователь',
     );
 
-    // Останавливаем индикатор загрузки
-    isLoading = false;
-    notifyListeners();
-
-    if (!success) {
-      errorMessage = "Registration failed. Please try again.";
+    if (context.mounted) {
+      isLoading = false;
       notifyListeners();
-      return false;
-    }
 
-    // Успешная регистрация
-    errorMessage = '';
-    return true;
+      if (success) {
+        errorMessage = '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Registered successfully! Check email to confirm."),
+          ),
+        );
+
+        Navigator.pushNamed(
+          context,
+          AppRoutes.confirmation,
+          arguments: {
+            'email': email,
+            'operation': ConfirmOperationsConstants.confirmEmail,
+          },
+        );
+      } else {
+        errorMessage = "Registration failed. Please try again.";
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(errorMessage)));
+      }
+    }
   }
 }

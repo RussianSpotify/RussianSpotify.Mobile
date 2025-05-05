@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:russian_spotify_project/core/utils/app_routes.dart';
 import 'package:russian_spotify_project/presentation/widgets/auth/register_widget.dart';
-import '../viewmodels/register_viewmodel.dart';
 import '../widgets/auth/header_widget.dart';
 
 class RegisterView extends StatefulWidget {
@@ -13,29 +11,6 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  void handleRegister(BuildContext context) {
-    final vm = Provider.of<RegisterViewModel>(context, listen: false);
-
-    if (!vm.passwordsMatch) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Passwords don't match")));
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Registered successfully! Check email to confirm."),
-      ),
-    );
-
-    Navigator.pushNamed(
-      context,
-      AppRoutes.confirmation,
-      arguments: {'email': vm.email, 'operation': 'ConfirmEmail'},
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -44,7 +44,7 @@ class ResetPasswordForm extends StatelessWidget {
           onPressed:
               () =>
                   viewModel.isPasswordsMatching
-                      ? viewModel.resetPassword
+                      ? viewModel.resetPassword(context)
                       : null,
           style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
           child: const Text("Reset", style: TextStyle(color: Colors.white)),
