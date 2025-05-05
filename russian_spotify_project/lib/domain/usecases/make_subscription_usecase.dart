@@ -1,4 +1,4 @@
-import '../interfaces/subcription_repository.dart';
+import '../interfaces/subscription_repository.dart';
 
 class MakeSubscriptionUseCase {
   final SubscriptionRepository repository;

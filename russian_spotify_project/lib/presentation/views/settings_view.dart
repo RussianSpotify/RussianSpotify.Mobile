@@ -9,6 +9,9 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SettingsViewModel>(
       builder: (context, viewModel, child) {
+        if (!viewModel.isInitialized) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [Expanded(child: viewModel.selectedPage.component)],
