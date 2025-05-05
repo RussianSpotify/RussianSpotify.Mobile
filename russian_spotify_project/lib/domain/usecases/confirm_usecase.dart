@@ -9,10 +9,6 @@ class ConfirmUseCase {
     return await _authRepository.confirmEmail(email, confirmationCode);
   }
 
-  Future<bool> resetPassword(String email) async {
-    return await _authRepository.resetPassword(email);
-  }
-
   Future<bool> confirmNewPassword(
     String email,
     String newPassword,

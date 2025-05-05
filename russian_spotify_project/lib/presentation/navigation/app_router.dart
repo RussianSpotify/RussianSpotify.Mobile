@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/presentation/views/about_view.dart';
+import 'package:russian_spotify_project/presentation/views/confirmation_view.dart';
 import 'package:russian_spotify_project/presentation/views/payment_history_view.dart';
 import 'package:russian_spotify_project/presentation/views/register_view.dart';
+import 'package:russian_spotify_project/presentation/views/reset_password_view.dart';
 import 'package:russian_spotify_project/presentation/views/subscription_view.dart';
 import '../../core/utils/app_routes.dart';
 import '../views/home_view.dart';
@@ -25,8 +27,10 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const LoginView());
       case AppRoutes.register:
         return MaterialPageRoute(builder: (_) => const RegisterView());
-      // case AppRoutes.confirmation:
-      //   return MaterialPageRoute(builder: (_) => const ConfirmationView());
+      case AppRoutes.confirmation:
+        return MaterialPageRoute(builder: (_) => const ConfirmationView());
+      case AppRoutes.resetPassword:
+        return MaterialPageRoute(builder: (_) => const ResetPasswordView());
       default:
         return MaterialPageRoute(
           builder:

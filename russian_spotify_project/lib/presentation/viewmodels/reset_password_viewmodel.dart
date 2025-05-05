@@ -1,5 +1,3 @@
-// lib/presentation/viewmodels/reset_password_viewmodel.dart
-
 import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/domain/usecases/reset_password_usecase.dart';
 
@@ -9,31 +7,25 @@ class ResetPasswordViewModel extends ChangeNotifier {
   final ResetPasswordUseCase _resetPasswordUseCase;
   bool _isNewPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  bool _isPasswordsMatching = true;
-  String _email = '';
-  String _newPassword = '';
-  String _confirmPassword = '';
+  String email = '';
+  String newPassword = '';
+  String confirmPassword = '';
 
   ResetPasswordViewModel(this._resetPasswordUseCase);
 
   bool get isNewPasswordVisible => _isNewPasswordVisible;
+
   bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
-  bool get isPasswordsMatching => _isPasswordsMatching;
 
-  void updateEmail(String email) {
-    email = email;
+  bool get isPasswordsMatching => newPassword == confirmPassword;
+
+  void updateConfirmPassword(String value) {
+    confirmPassword = value;
     notifyListeners();
   }
 
-  void updateNewPassword(String password) {
-    _newPassword = password;
-    validatePasswords();
-    notifyListeners();
-  }
-
-  void updateConfirmPassword(String password) {
-    _confirmPassword = password;
-    validatePasswords();
+  void updateNewPassword(String value) {
+    newPassword = value;
     notifyListeners();
   }
 
@@ -47,23 +39,20 @@ class ResetPasswordViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void validatePasswords() {
-    _isPasswordsMatching = _newPassword == _confirmPassword;
-    notifyListeners();
-  }
-
   Future<void> resetPassword(BuildContext context) async {
-    final success = await _resetPasswordUseCase.resetPassword(
-      _email,
-      _newPassword,
-    );
+    final confirmationCode = await _resetPasswordUseCase.resetPassword(email);
     if (context.mounted) {
-      if (success) {
-        _showMessage(context, 'Success', 'Operation completed successfully!');
-        Navigator.pushNamed(context, AppRoutes.login);
-      } else {
-        _showMessage(context, 'Error', 'Something went wrong. Try again.');
-      }
+      _showMessage(context, 'Success', 'Operation completed successfully!');
+      Navigator.pushNamed(
+        context,
+        AppRoutes.login,
+        arguments: {
+          'email': email,
+          'newPassword': newPassword,
+          'confirmPassword': confirmPassword,
+          'confirmationCode': confirmationCode,
+        },
+      );
     }
   }
 

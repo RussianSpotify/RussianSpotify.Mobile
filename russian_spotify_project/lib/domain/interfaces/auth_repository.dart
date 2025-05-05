@@ -7,7 +7,7 @@ abstract class AuthRepository {
     String passwordConfirm,
     String role,
   );
-  Future<bool> resetPassword(String email);
+  Future<String> resetPassword(String email);
 
   Future<bool> confirmEmail(String email, String confirmationCode);
   Future<bool> confirmNewPassword(

@@ -26,9 +26,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<bool> resetPassword(String email) async {
+  Future<String> resetPassword(String email) async {
     await Future.delayed(const Duration(seconds: 1));
-    return true;
+    return "123456";
   }
 
   @override
