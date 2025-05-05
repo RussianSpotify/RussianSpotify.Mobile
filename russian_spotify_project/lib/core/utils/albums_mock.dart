@@ -1,4 +1,4 @@
-final List<Map<String, String>> albums_mock = [
+final List<Map<String, String>> albumsMock = [
   {'title': 'Chill Vibes', 'artist': 'Various Artists'},
   {'title': 'Workout Hits', 'artist': 'DJ Energy'},
   {'title': 'Top 50 Russia', 'artist': 'Various Artists'},
