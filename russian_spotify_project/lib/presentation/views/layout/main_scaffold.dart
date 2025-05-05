@@ -18,15 +18,15 @@ class MainScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-        appBar ??
-        AppBar(
-          backgroundColor: Colors.purple,
-          title: const Text(
-            'Russian Spotify',
-            style: TextStyle(color: Colors.white),
+          appBar ??
+          AppBar(
+            backgroundColor: Colors.purple,
+            title: const Text(
+              'Russian Spotify',
+              style: TextStyle(color: Colors.white),
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
           ),
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -59,13 +59,27 @@ class MainScaffold extends StatelessWidget {
                 Navigator.pushNamed(context, AppRoutes.search);
               },
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.library_music),
-            //   title: const Text('Your Library'),
-            //   onTap: () {
-            //     Navigator.pushNamed(context, AppRoutes.library);
-            //   },
-            // ),
+            ListTile(
+              leading: const Icon(Icons.library_music),
+              title: const Text('Your Library'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.myLibrary);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.settings);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info),
+              title: const Text('About us'),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.about);
+              },
+            ),
           ],
         ),
       ),

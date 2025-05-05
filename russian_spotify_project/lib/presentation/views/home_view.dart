@@ -9,6 +9,15 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: const Text(
+          'Russian Spotify',
+          style: TextStyle(color: Colors.white),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -16,10 +25,7 @@ class HomeView extends StatelessWidget {
           children: [
             const Text(
               'Добрый день, Ирек!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Expanded(
@@ -37,7 +43,11 @@ class HomeView extends StatelessWidget {
                       padding: const EdgeInsets.all(20),
                       child: Row(
                         children: [
-                          const Icon(Icons.album, size: 50, color: Colors.purple),
+                          const Icon(
+                            Icons.album,
+                            size: 50,
+                            color: Colors.purple,
+                          ),
                           const SizedBox(width: 20),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
