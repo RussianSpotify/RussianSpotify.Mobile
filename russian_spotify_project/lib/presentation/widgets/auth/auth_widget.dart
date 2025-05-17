@@ -1,91 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../../../core/utils/app_routes.dart';
-import '../../viewmodels/login_viewmodel.dart';
 
 class AuthForm extends StatelessWidget {
-  const AuthForm({super.key});
+  final Function(String) onEmailChanged;
+  final Function(String) onPasswordChanged;
+  final VoidCallback onLoginPressed;
+  final bool isLoading;
+  final String? errorMessage;
+
+  const AuthForm({
+    super.key,
+    required this.onEmailChanged,
+    required this.onPasswordChanged,
+    required this.onLoginPressed,
+    required this.isLoading,
+    this.errorMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<LoginViewModel>(context);
-
     return Column(
       children: [
         TextField(
-          onChanged: (value) => viewModel.email = value,
+          onChanged: onEmailChanged,
           decoration: const InputDecoration(labelText: 'Email'),
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
         TextField(
-          onChanged: (value) => viewModel.password = value,
+          onChanged: onPasswordChanged,
           obscureText: true,
           decoration: const InputDecoration(labelText: 'Password'),
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
+        if (errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              errorMessage!,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
         const SizedBox(height: 24),
-        if (viewModel.isLoading)
+        if (isLoading)
           const CircularProgressIndicator()
         else
-          Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.purple,
-                    ),
-                    onPressed: () async {
-                      await viewModel.login();
-
-                      if (!context.mounted) return;
-
-                      if (viewModel.isLoggedIn) {
-                        Navigator.pushNamed(context, AppRoutes.home);
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: const Text('Error'),
-                                content: Text(
-                                  viewModel.errorMessage ?? 'Unknown error',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.purple,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.resetPassword);
-                    },
-                    child: const Text(
-                      'Forgot password?',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          ElevatedButton(
+            onPressed: onLoginPressed,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.purple,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Login'),
           ),
       ],
     );

@@ -1,39 +1,45 @@
 import 'package:get_it/get_it.dart';
+import 'package:russian_spotify_project/data/repositories/albums_repository_impl.dart';
+import 'package:russian_spotify_project/data/repositories/auth_repository_impl.dart';
+import 'package:russian_spotify_project/data/repositories/payment_history_repository_impl.dart';
 import 'package:russian_spotify_project/data/repositories/playlist_repository_impl.dart';
 import 'package:russian_spotify_project/data/repositories/settings_repository_impl.dart';
 import 'package:russian_spotify_project/data/repositories/song_repository_impl.dart';
+import 'package:russian_spotify_project/data/repositories/subscription_repository_impl.dart';
+import 'package:russian_spotify_project/domain/interfaces/album_repository.dart';
+import 'package:russian_spotify_project/domain/interfaces/auth_repository.dart';
+import 'package:russian_spotify_project/domain/interfaces/payment_history_repository.dart';
 import 'package:russian_spotify_project/domain/interfaces/playlist_repository.dart';
 import 'package:russian_spotify_project/domain/interfaces/settings_repository.dart';
+import 'package:russian_spotify_project/domain/interfaces/song_repository.dart';
+import 'package:russian_spotify_project/domain/interfaces/subscription_repository.dart';
 import 'package:russian_spotify_project/domain/usecases/confirm_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/get_albums_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/get_favorite_songs_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/get_payment_history_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/get_playlist_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/get_settings_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/get_subscription_options_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/login_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/make_subscription_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/register_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/reset_password_usecase.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/about_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/confirmation_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/login_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/register_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/reset_password_viewmodel.dart';
-
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../data/repositories/payment_history_repository_impl.dart';
-import '../../data/repositories/subscription_repository_impl.dart';
-import '../../domain/interfaces/auth_repository.dart';
-import '../../domain/interfaces/payment_history_repository.dart';
-import '../../domain/interfaces/song_repository.dart';
-import '../../domain/interfaces/subscription_repository.dart';
-import '../../domain/usecases/get_favorite_songs_usecase.dart';
-import '../../domain/usecases/get_payment_history_usecase.dart';
-import '../../domain/usecases/get_settings_usecase.dart';
-import '../../domain/usecases/login_usecase.dart';
-import '../../domain/usecases/make_subscription_usecase.dart';
-import '../../presentation/viewmodels/payment_history_viewmodel.dart';
-import '../../presentation/viewmodels/playlist_viewmodel.dart';
-import '../../presentation/viewmodels/settings_viewmodel.dart';
-import '../../presentation/viewmodels/subscription_viewmodel.dart';
-import '../../presentation/viewmodels/user_profile_viewmodel.dart';
+import 'package:russian_spotify_project/domain/usecases/search_songs_usecase.dart';
+import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/confirmation/confirmation_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/home/home_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/login/login_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/playlist/playlist_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/register/register_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/reset_password/reset_password_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/search/search_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/settings/settings_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
 
 final GetIt locator = GetIt.instance;
+
 void setupLocator() {
   // Settings
   locator.registerLazySingleton<SettingsRepository>(
@@ -42,12 +48,12 @@ void setupLocator() {
   locator.registerLazySingleton<GetSettingsUseCase>(
     () => GetSettingsUseCase(locator<SettingsRepository>()),
   );
-  locator.registerFactory<SettingsViewModel>(
-    () => SettingsViewModel(locator<GetSettingsUseCase>()),
+  locator.registerFactory<SettingsBloc>(
+    () => SettingsBloc(locator<GetSettingsUseCase>()),
   );
 
   // About
-  locator.registerFactory<AboutViewModel>(() => AboutViewModel());
+  locator.registerFactory<AboutBloc>(() => AboutBloc());
 
   // Subscription
   locator.registerLazySingleton<SubscriptionRepository>(
@@ -59,22 +65,22 @@ void setupLocator() {
   locator.registerLazySingleton<GetSubscriptionOptionsUseCase>(
     () => GetSubscriptionOptionsUseCase(locator<SubscriptionRepository>()),
   );
-  locator.registerFactory<SubscriptionViewModel>(
-    () => SubscriptionViewModel(
+  locator.registerFactory<SubscriptionBloc>(
+    () => SubscriptionBloc(
       locator<GetSubscriptionOptionsUseCase>(),
       locator<MakeSubscriptionUseCase>(),
     ),
   );
 
-  // Payment history
+  // Payment History
   locator.registerLazySingleton<PaymentHistoryRepository>(
     () => PaymentHistoryRepositoryImpl(),
   );
   locator.registerLazySingleton<GetPaymentHistoryUseCase>(
     () => GetPaymentHistoryUseCase(locator<PaymentHistoryRepository>()),
   );
-  locator.registerFactory<PaymentHistoryViewModel>(
-    () => PaymentHistoryViewModel(locator<GetPaymentHistoryUseCase>()),
+  locator.registerFactory<PaymentHistoryBloc>(
+    () => PaymentHistoryBloc(locator<GetPaymentHistoryUseCase>()),
   );
 
   // Auth
@@ -91,17 +97,15 @@ void setupLocator() {
   locator.registerLazySingleton<ResetPasswordUseCase>(
     () => ResetPasswordUseCase(locator<AuthRepository>()),
   );
-  locator.registerFactory<LoginViewModel>(
-    () => LoginViewModel(locator<LoginUseCase>()),
+  locator.registerFactory<LoginBloc>(() => LoginBloc(locator<LoginUseCase>()));
+  locator.registerFactory<RegisterBloc>(
+    () => RegisterBloc(locator<RegisterUseCase>()),
   );
-  locator.registerFactory<RegisterViewModel>(
-    () => RegisterViewModel(locator<RegisterUseCase>()),
+  locator.registerFactory<ConfirmationBloc>(
+    () => ConfirmationBloc(locator<ConfirmUseCase>()),
   );
-  locator.registerFactory<ConfirmationViewModel>(
-    () => ConfirmationViewModel(locator<ConfirmUseCase>()),
-  );
-  locator.registerFactory<ResetPasswordViewModel>(
-    () => ResetPasswordViewModel(locator<ResetPasswordUseCase>()),
+  locator.registerFactory<ResetPasswordBloc>(
+    () => ResetPasswordBloc(locator<ResetPasswordUseCase>()),
   );
 
   // Playlist
@@ -111,16 +115,34 @@ void setupLocator() {
   locator.registerLazySingleton<GetPlaylistUseCase>(
     () => GetPlaylistUseCase(locator<PlaylistRepository>()),
   );
-  locator.registerFactory<PlaylistViewModel>(
-    () => PlaylistViewModel(locator<GetPlaylistUseCase>()),
+  locator.registerFactory<PlaylistBloc>(
+    () => PlaylistBloc(locator<GetPlaylistUseCase>()),
   );
 
-  // User
+  // User Profile
   locator.registerLazySingleton<SongRepository>(() => SongRepositoryImpl());
   locator.registerLazySingleton<GetFavoriteSongsUseCase>(
     () => GetFavoriteSongsUseCase(locator<SongRepository>()),
   );
-  locator.registerFactory<UserProfileViewModel>(
-    () => UserProfileViewModel(locator<GetFavoriteSongsUseCase>()),
+  locator.registerFactory<UserProfileBloc>(
+    () => UserProfileBloc(locator<GetFavoriteSongsUseCase>()),
+  );
+
+  // Home
+  locator.registerFactory<AlbumsRepository>(() => AlbumsRepositoryImpl());
+  locator.registerFactory<GetAlbumsUseCase>(
+    () => GetAlbumsUseCaseImpl(locator<AlbumsRepository>()),
+  );
+  locator.registerFactory<HomeBloc>(
+    () => HomeBloc(locator<GetAlbumsUseCase>()),
+  );
+
+  // Search
+  locator.registerFactory<SongRepository>(() => SongRepositoryImpl());
+  locator.registerFactory<SearchSongsUseCase>(
+    () => SearchSongsUseCaseImpl(locator<SongRepository>()),
+  );
+  locator.registerFactory<SearchBloc>(
+    () => SearchBloc(locator<SearchSongsUseCase>()),
   );
 }

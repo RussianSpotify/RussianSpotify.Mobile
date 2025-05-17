@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/about/about_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/confirmation/confirmation_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/home/home_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/login/login_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/playlist/playlist_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/register/register_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/reset_password/reset_password_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/settings/settings_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
 import 'package:russian_spotify_project/presentation/navigation/app_router.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/about_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/confirmation_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/login_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/payment_history_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/playlist_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/register_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/reset_password_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/settings_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/subscription_viewmodel.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/user_profile_viewmodel.dart';
 import 'package:russian_spotify_project/presentation/widgets/music_player_widget.dart';
 
 import 'core/di/locator.dart';
-import 'core/services/audio_player_service.dart';
 import 'core/utils/app_routes.dart';
 
 void main() {
@@ -23,39 +25,29 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AudioPlayerService>(
-          create: (_) => AudioPlayerService(),
+        BlocProvider<AboutBloc>(
+          create: (_) => locator<AboutBloc>()..add(LoadAboutData()),
         ),
-        ChangeNotifierProvider<SettingsViewModel>(
-          create: (_) => locator<SettingsViewModel>(),
+        BlocProvider<ConfirmationBloc>(
+          create: (_) => locator<ConfirmationBloc>(),
         ),
-        ChangeNotifierProvider<SubscriptionViewModel>(
-          create: (_) => locator<SubscriptionViewModel>(),
+        BlocProvider<LoginBloc>(create: (_) => locator<LoginBloc>()),
+        BlocProvider<RegisterBloc>(create: (_) => locator<RegisterBloc>()),
+        BlocProvider<ResetPasswordBloc>(
+          create: (_) => locator<ResetPasswordBloc>(),
         ),
-        ChangeNotifierProvider<AboutViewModel>(
-          create: (_) => locator<AboutViewModel>(),
+        BlocProvider<SettingsBloc>(create: (_) => locator<SettingsBloc>()),
+        BlocProvider<SubscriptionBloc>(
+          create: (_) => locator<SubscriptionBloc>(),
         ),
-        ChangeNotifierProvider<PaymentHistoryViewModel>(
-          create: (_) => locator<PaymentHistoryViewModel>(),
+        BlocProvider<PaymentHistoryBloc>(
+          create: (_) => locator<PaymentHistoryBloc>(),
         ),
-        ChangeNotifierProvider<LoginViewModel>(
-          create: (_) => locator<LoginViewModel>(),
+        BlocProvider<PlaylistBloc>(create: (_) => locator<PlaylistBloc>()),
+        BlocProvider<UserProfileBloc>(
+          create: (_) => locator<UserProfileBloc>(),
         ),
-        ChangeNotifierProvider<RegisterViewModel>(
-          create: (_) => locator<RegisterViewModel>(),
-        ),
-        ChangeNotifierProvider<ConfirmationViewModel>(
-          create: (_) => locator<ConfirmationViewModel>(),
-        ),
-        ChangeNotifierProvider<ResetPasswordViewModel>(
-          create: (_) => locator<ResetPasswordViewModel>(),
-        ),
-        ChangeNotifierProvider<PlaylistViewModel>(
-          create: (_) => locator<PlaylistViewModel>(),
-        ),
-        ChangeNotifierProvider<UserProfileViewModel>(
-          create: (_) => locator<UserProfileViewModel>(),
-        ),
+        BlocProvider<HomeBloc>(create: (_) => locator<HomeBloc>()),
       ],
       child: const MyApp(),
     ),

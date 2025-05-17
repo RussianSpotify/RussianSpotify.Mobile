@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:russian_spotify_project/presentation/widgets/auth/reset_password_widget.dart';
 import '../widgets/auth/header_widget.dart';
-import '../widgets/auth/reset_password_widget.dart';
 
-class ResetPasswordView extends StatefulWidget {
+class ResetPasswordView extends StatelessWidget {
   const ResetPasswordView({super.key});
 
-  @override
-  State<ResetPasswordView> createState() => _ResetPasswordViewState();
-}
-
-class _ResetPasswordViewState extends State<ResetPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

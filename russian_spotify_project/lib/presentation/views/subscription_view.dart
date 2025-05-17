@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_state.dart';
 
-import '../viewmodels/subscription_viewmodel.dart';
-
-class SubscriptionView extends StatefulWidget {
+class SubscriptionView extends StatelessWidget {
   const SubscriptionView({super.key});
 
   @override
-  State<SubscriptionView> createState() => _SubscriptionViewState();
-}
-
-class _SubscriptionViewState extends State<SubscriptionView> {
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final viewModel = Provider.of<SubscriptionViewModel>(
-      context,
-      listen: false,
-    );
-    viewModel.init();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer<SubscriptionViewModel>(
-      builder:
-          (context, viewModel, _) => Scaffold(
-            backgroundColor: Colors.purple.withValues(alpha: 0.5),
+    return BlocConsumer<SubscriptionBloc, SubscriptionState>(
+      listener: (context, state) {
+        if (state is SubscriptionSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("You've successfully subscribed!")),
+          );
+          Navigator.of(context).pop();
+        } else if (state is SubscriptionFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+        }
+      },
+      builder: (context, state) {
+        if (state is SubscriptionInitial) {
+          context.read<SubscriptionBloc>().add(LoadSubscriptionOptions());
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is SubscriptionLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is SubscriptionLoaded) {
+          return Scaffold(
+            backgroundColor: Colors.purple.withAlpha(128),
             body: GestureDetector(
               onTap: () => Navigator.of(context).pop(),
               child: Center(
@@ -36,7 +40,7 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                     width: MediaQuery.of(context).size.width * 0.85,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: Colors.white.withAlpha(230),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -60,12 +64,15 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                         const SizedBox(height: 8),
                         Column(
                           children:
-                              viewModel.subscriptionOptions.map((option) {
+                              state.subscriptionOptions.map((option) {
                                 final isSelected =
-                                    option.value == viewModel.selectedLength;
+                                    option.value == state.selectedLength;
                                 return GestureDetector(
-                                  onTap:
-                                      () => viewModel.setLength(option.value),
+                                  onTap: () {
+                                    context.read<SubscriptionBloc>().add(
+                                      SelectLength(option.value),
+                                    );
+                                  },
                                   child: Container(
                                     width: double.infinity,
                                     margin: const EdgeInsets.symmetric(
@@ -108,20 +115,21 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed:
-                                viewModel.isLoading
-                                    ? null
-                                    : () => viewModel.subscribe(context),
+                            onPressed: () {
+                              context.read<SubscriptionBloc>().add(
+                                PerformSubscription(),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.purple,
                               foregroundColor: Colors.white,
                             ),
                             child:
-                                viewModel.isLoading
-                                    ? SizedBox(
+                                state is SubscriptionLoading
+                                    ? const SizedBox(
                                       width: 25,
                                       height: 25,
-                                      child: const CircularProgressIndicator(
+                                      child: CircularProgressIndicator(
                                         color: Colors.purple,
                                       ),
                                     )
@@ -142,7 +150,13 @@ class _SubscriptionViewState extends State<SubscriptionView> {
                 ),
               ),
             ),
-          ),
+          );
+        } else {
+          return const Center(
+            child: Text('Unknown state', style: TextStyle(color: Colors.white)),
+          );
+        }
+      },
     );
   }
 }
