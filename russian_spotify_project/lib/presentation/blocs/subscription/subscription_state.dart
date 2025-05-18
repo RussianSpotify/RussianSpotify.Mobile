@@ -1,4 +1,4 @@
-import 'package:russian_spotify_project/domain/entities/subscription_option_entity.dart';
+import 'package:russian_spotify_project/domain/entities/subscription_entity.dart';
 
 abstract class SubscriptionState {}
 
@@ -7,11 +7,11 @@ class SubscriptionInitial extends SubscriptionState {}
 class SubscriptionLoading extends SubscriptionState {}
 
 class SubscriptionLoaded extends SubscriptionState {
-  final List<SubscriptionOption> subscriptionOptions;
+  final List<Subscription> subscriptions;
   final int selectedLength;
 
   SubscriptionLoaded({
-    required this.subscriptionOptions,
+    required this.subscriptions,
     required this.selectedLength,
   });
 }

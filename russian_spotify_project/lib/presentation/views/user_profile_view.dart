@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_state.dart';
-import '../../presentation/widgets/song/song_list_widget.dart';
-import '../views/layout/main_scaffold.dart';
+import 'package:russian_spotify_project/presentation/views/layout/main_scaffold.dart';
+import 'package:russian_spotify_project/presentation/widgets/song/song_list_widget.dart';
 
 class UserProfileView extends StatelessWidget {
   const UserProfileView({super.key});
@@ -12,24 +12,16 @@ class UserProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UserProfileBloc, UserProfileState>(
-      listener: (context, state) {
-        // Дополнительные действия при изменении состояния (если нужны)
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is UserProfileInitial) {
+          context.read<UserProfileBloc>().add(LoadUserInfo());
           context.read<UserProfileBloc>().add(LoadFavoriteSongs());
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
-            ),
-          );
+          return const Center(child: CircularProgressIndicator());
         } else if (state is UserProfileLoading) {
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
-            ),
-          );
+          return const Center(child: CircularProgressIndicator());
         } else if (state is UserProfileLoaded) {
+          final userInfo = state.userInfo;
           return MainScaffold(
             appBar: AppBar(
               title: const Text('User Profile'),
@@ -52,14 +44,18 @@ class UserProfileView extends StatelessWidget {
                       const SizedBox(width: 16),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Irek',
-                            style: TextStyle(
+                            userInfo?.userName ?? 'Unknown',
+                            style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
+                          ),
+                          Text(
+                            userInfo?.email ?? 'No email',
+                            style: const TextStyle(color: Colors.grey),
                           ),
                         ],
                       ),
@@ -77,14 +73,14 @@ class UserProfileView extends StatelessWidget {
                   const SizedBox(height: 16),
                   Expanded(
                     child:
-                        state.favoriteSongs.isEmpty
+                        state.favoriteSongs?.isEmpty ?? true
                             ? const Center(
                               child: Text(
                                 'No favorite songs yet',
                                 style: TextStyle(color: Colors.white),
                               ),
                             )
-                            : SongListWidget(songs: state.favoriteSongs),
+                            : SongListWidget(songs: state.favoriteSongs!),
                   ),
                 ],
               ),
@@ -98,9 +94,7 @@ class UserProfileView extends StatelessWidget {
             ),
           );
         } else {
-          return const Center(
-            child: Text('Unknown state', style: TextStyle(color: Colors.white)),
-          );
+          return const Center(child: Text('Unknown state'));
         }
       },
     );

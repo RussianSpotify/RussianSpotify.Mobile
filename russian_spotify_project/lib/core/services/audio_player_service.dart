@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:russian_spotify_project/core/utils/mock/songs_mock.dart';
 
 import '../../data/dto/song.dart';
-import '../utils/mock/playlists_mock.dart';
 
 class AudioPlayerService with ChangeNotifier {
   List<Song> _playlist = [];
@@ -14,7 +14,7 @@ class AudioPlayerService with ChangeNotifier {
       _playlist.isNotEmpty ? _playlist[_currentIndex] : null;
 
   AudioPlayerService() {
-    _playlist = playlistsMock.firstWhere((p) => p.id == 1).songs;
+    _playlist = songsMock;
   }
 
   Future<void> togglePlayPause() async {

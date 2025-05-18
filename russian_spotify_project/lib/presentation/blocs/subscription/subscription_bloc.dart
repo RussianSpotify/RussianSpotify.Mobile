@@ -1,21 +1,15 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:russian_spotify_project/domain/entities/subscription_option_entity.dart';
-import 'package:russian_spotify_project/domain/usecases/get_subscription_options_usecase.dart';
+import 'package:russian_spotify_project/domain/usecases/get_subscription_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/make_subscription_usecase.dart';
-import 'subscription_event.dart';
-import 'subscription_state.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_state.dart';
 
 class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
-  final GetSubscriptionOptionsUseCase _getSubscriptionOptionsUseCase;
+  final GetSubscriptionsUseCase _getSubscriptionsUseCase;
   final MakeSubscriptionUseCase _makeSubscriptionUseCase;
 
-  List<SubscriptionOption> _subscriptionOptions = [];
-  int _selectedLength = 1;
-
-  SubscriptionBloc(
-    this._getSubscriptionOptionsUseCase,
-    this._makeSubscriptionUseCase,
-  ) : super(SubscriptionInitial()) {
+  SubscriptionBloc(this._getSubscriptionsUseCase, this._makeSubscriptionUseCase)
+    : super(SubscriptionInitial()) {
     on<LoadSubscriptionOptions>(_loadSubscriptionOptions);
     on<SelectLength>(_selectLength);
     on<PerformSubscription>(_performSubscription);
@@ -28,11 +22,11 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     emit(SubscriptionLoading());
 
     try {
-      _subscriptionOptions = await _getSubscriptionOptionsUseCase.call();
+      final subscriptions = await _getSubscriptionsUseCase.call("1");
       emit(
         SubscriptionLoaded(
-          subscriptionOptions: _subscriptionOptions,
-          selectedLength: _selectedLength,
+          subscriptions: subscriptions,
+          selectedLength: 1, // По умолчанию выбираем первую опцию
         ),
       );
     } catch (e) {
@@ -41,14 +35,15 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
   }
 
   void _selectLength(SelectLength event, Emitter<SubscriptionState> emit) {
-    _selectedLength = event.length;
-
-    emit(
-      SubscriptionLoaded(
-        subscriptionOptions: _subscriptionOptions,
-        selectedLength: _selectedLength,
-      ),
-    );
+    if (state is SubscriptionLoaded) {
+      final currentState = state as SubscriptionLoaded;
+      emit(
+        SubscriptionLoaded(
+          subscriptions: currentState.subscriptions,
+          selectedLength: event.length,
+        ),
+      );
+    }
   }
 
   Future<void> _performSubscription(
@@ -58,7 +53,10 @@ class SubscriptionBloc extends Bloc<SubscriptionEvent, SubscriptionState> {
     emit(SubscriptionLoading());
 
     try {
-      final success = await _makeSubscriptionUseCase(_selectedLength);
+      final currentState = state as SubscriptionLoaded;
+      final success = await _makeSubscriptionUseCase(
+        currentState.selectedLength,
+      );
 
       if (success) {
         emit(SubscriptionSuccess());

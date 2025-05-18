@@ -7,10 +7,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchSongsUseCase _searchSongsUseCase;
 
   SearchBloc(this._searchSongsUseCase) : super(SearchInitial()) {
-    on<UpdateQuery>(_updateQuery);
+    on<UpdateQuery>(_searchSongs);
   }
 
-  Future<void> _updateQuery(
+  Future<void> _searchSongs(
     UpdateQuery event,
     Emitter<SearchState> emit,
   ) async {
