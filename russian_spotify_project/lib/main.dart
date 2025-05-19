@@ -66,7 +66,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
-        initialRoute: AppRoutes.login,
+        initialRoute: AppRoutes.register,
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) {
           return Scaffold(

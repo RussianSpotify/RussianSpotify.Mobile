@@ -17,12 +17,14 @@ class _ConfirmationViewState extends State<ConfirmationView> {
   String? _email;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     // Получаем email из параметров маршрута
     final route = ModalRoute.of(context);
     final arguments = route?.settings.arguments as Map<String, String>?;
-    _email = arguments?['email'];
+    setState(() {
+      _email = arguments?['email'];
+    });
   }
 
   @override
