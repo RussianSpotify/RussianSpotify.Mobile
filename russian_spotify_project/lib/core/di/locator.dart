@@ -30,17 +30,15 @@ import 'package:russian_spotify_project/domain/usecases/register_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/reset_password_usecase.dart';
 import 'package:russian_spotify_project/domain/usecases/search_songs_usecase.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/confirmation/confirmation_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/home/home_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/login/login_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/playlist/playlist_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/register/register_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/reset_password/reset_password_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/search/search_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/settings/settings_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
+import 'package:russian_spotify_project/presentation/widgets/music_player/music_player_bloc.dart';
 
 final GetIt locator = GetIt.instance;
 
@@ -49,13 +47,13 @@ void setupLocator() {
 
   // Settings
   locator.registerLazySingleton<SettingsRepository>(
-    () => SettingsRepositoryImpl(),
+        () => SettingsRepositoryImpl(),
   );
   locator.registerLazySingleton<GetSettingsUseCase>(
-    () => GetSettingsUseCase(locator<SettingsRepository>()),
+        () => GetSettingsUseCase(locator<SettingsRepository>()),
   );
   locator.registerFactory<SettingsBloc>(
-    () => SettingsBloc(locator<GetSettingsUseCase>()),
+        () => SettingsBloc(locator<GetSettingsUseCase>()),
   );
 
   // About
@@ -63,102 +61,106 @@ void setupLocator() {
 
   // Subscription
   locator.registerLazySingleton<SubscriptionRepository>(
-    () => SubscriptionRepositoryImpl(locator<GraphQlService>()),
+        () => SubscriptionRepositoryImpl(locator<GraphQlService>()),
   );
   locator.registerLazySingleton<MakeSubscriptionUseCase>(
-    () => MakeSubscriptionUseCase(locator<SubscriptionRepository>()),
+        () => MakeSubscriptionUseCase(locator<SubscriptionRepository>()),
   );
   locator.registerLazySingleton<GetSubscriptionsUseCase>(
-    () => GetSubscriptionsUseCase(locator<SubscriptionRepository>()),
+        () => GetSubscriptionsUseCase(locator<SubscriptionRepository>()),
   );
   locator.registerFactory<SubscriptionBloc>(
-    () => SubscriptionBloc(
-      locator<GetSubscriptionsUseCase>(),
-      locator<MakeSubscriptionUseCase>(),
-    ),
+        () =>
+        SubscriptionBloc(
+          locator<GetSubscriptionsUseCase>(),
+          locator<MakeSubscriptionUseCase>(),
+        ),
   );
 
   // Payment History
   locator.registerLazySingleton<PaymentHistoryRepository>(
-    () => PaymentHistoryRepositoryImpl(),
+        () => PaymentHistoryRepositoryImpl(),
   );
   locator.registerLazySingleton<GetPaymentHistoryUseCase>(
-    () => GetPaymentHistoryUseCase(locator<PaymentHistoryRepository>()),
+        () => GetPaymentHistoryUseCase(locator<PaymentHistoryRepository>()),
   );
   locator.registerFactory<PaymentHistoryBloc>(
-    () => PaymentHistoryBloc(locator<GetPaymentHistoryUseCase>()),
+        () => PaymentHistoryBloc(locator<GetPaymentHistoryUseCase>()),
   );
 
   // Auth
   locator.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl());
   locator.registerLazySingleton<LoginUseCase>(
-    () => LoginUseCase(locator<AuthRepository>()),
+        () => LoginUseCase(locator<AuthRepository>()),
   );
   locator.registerLazySingleton<RegisterUseCase>(
-    () => RegisterUseCase(locator<AuthRepository>()),
+        () => RegisterUseCase(locator<AuthRepository>()),
   );
   locator.registerLazySingleton<ConfirmUseCase>(
-    () => ConfirmUseCase(locator<AuthRepository>()),
+        () => ConfirmUseCase(locator<AuthRepository>()),
   );
   locator.registerLazySingleton<ResetPasswordUseCase>(
-    () => ResetPasswordUseCase(locator<AuthRepository>()),
+        () => ResetPasswordUseCase(locator<AuthRepository>()),
   );
-  locator.registerFactory<LoginBloc>(() => LoginBloc(locator<LoginUseCase>()));
-  locator.registerFactory<RegisterBloc>(
-    () => RegisterBloc(locator<RegisterUseCase>()),
-  );
-  locator.registerFactory<ConfirmationBloc>(
-    () => ConfirmationBloc(locator<ConfirmUseCase>()),
-  );
-  locator.registerFactory<ResetPasswordBloc>(
-    () => ResetPasswordBloc(locator<ResetPasswordUseCase>()),
+  locator.registerFactory<AuthBloc>(
+        () =>
+        AuthBloc(
+          loginUseCase: locator<LoginUseCase>(),
+          registerUseCase: locator<RegisterUseCase>(),
+          resetPasswordUseCase: locator<ResetPasswordUseCase>(),
+          confirmUseCase: locator<ConfirmUseCase>(),
+        ),
   );
 
   // Playlist
   locator.registerLazySingleton<PlaylistRepository>(
-    () => PlaylistRepositoryImpl(locator<GraphQlService>()),
+        () => PlaylistRepositoryImpl(locator<GraphQlService>()),
   );
   locator.registerLazySingleton<GetPlaylistUseCase>(
-    () => GetPlaylistUseCase(locator<PlaylistRepository>()),
+        () => GetPlaylistUseCase(locator<PlaylistRepository>()),
   );
   locator.registerFactory<PlaylistBloc>(
-    () => PlaylistBloc(locator<GetPlaylistUseCase>()),
+        () => PlaylistBloc(locator<GetPlaylistUseCase>()),
   );
 
   // User Profile
   locator.registerLazySingleton<UserRepository>(
-        () => UserRepositoryImpl( baseUrl: "http://192.168.56.1:80"),
+        () => UserRepositoryImpl(baseUrl: "http://192.168.56.1:80"),
   );
   locator.registerLazySingleton<SongRepository>(
-    () => SongRepositoryImpl(locator<GraphQlService>()),
+        () => SongRepositoryImpl(locator<GraphQlService>()),
   );
   locator.registerLazySingleton<GetFavoriteSongsUseCase>(
-    () => GetFavoriteSongsUseCase(locator<SongRepository>()),
+        () => GetFavoriteSongsUseCase(locator<SongRepository>()),
   );
   locator.registerFactory<GetUserInfoUseCase>(
-    () => GetUserInfoUseCase(locator<UserRepository>()),
+        () => GetUserInfoUseCase(locator<UserRepository>()),
   );
   locator.registerFactory<UserProfileBloc>(
-    () => UserProfileBloc(
-      locator<GetFavoriteSongsUseCase>(),
-      locator<GetUserInfoUseCase>(),
-    ),
+        () =>
+        UserProfileBloc(
+          locator<GetFavoriteSongsUseCase>(),
+          locator<GetUserInfoUseCase>(),
+        ),
   );
 
   // Home
   locator.registerFactory<AlbumsRepository>(() => AlbumsRepositoryImpl());
   locator.registerFactory<GetAlbumsUseCase>(
-    () => GetAlbumsUseCaseImpl(locator<AlbumsRepository>()),
+        () => GetAlbumsUseCaseImpl(locator<AlbumsRepository>()),
   );
   locator.registerFactory<HomeBloc>(
-    () => HomeBloc(locator<GetAlbumsUseCase>()),
+        () => HomeBloc(locator<GetAlbumsUseCase>()),
   );
 
   // Search
   locator.registerFactory<SearchSongsUseCase>(
-    () => SearchSongsUseCaseImpl(locator<SongRepository>()),
+        () => SearchSongsUseCaseImpl(locator<SongRepository>()),
   );
   locator.registerFactory<SearchBloc>(
-    () => SearchBloc(locator<SearchSongsUseCase>()),
+        () => SearchBloc(locator<SearchSongsUseCase>()),
   );
+
+  // Audio Player
+  locator.registerFactory<AudioPlayerBloc>(() => AudioPlayerBloc());
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:russian_spotify_project/core/utils/confirm_operations_constants.dart';
-import 'package:russian_spotify_project/presentation/blocs/register/register_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/register/register_event.dart';
-import 'package:russian_spotify_project/presentation/blocs/register/register_state.dart';
-import 'package:russian_spotify_project/presentation/widgets/auth/register_widget.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_state.dart';
 import '../../core/utils/app_routes.dart';
+import '../widgets/auth/register_widget.dart';
 import '../widgets/auth/header_widget.dart';
 
 class RegisterView extends StatelessWidget {
@@ -26,14 +26,14 @@ class RegisterView extends StatelessWidget {
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: BlocConsumer<RegisterBloc, RegisterState>(
+                child: BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
-                    if (state is RegisterSuccess) {
+                    if (state is Authenticated) {
                       Navigator.pushNamed(
                         context,
                         AppRoutes.confirmation,
                         arguments: {
-                          'email': context.read<RegisterBloc>().email,
+                          'email': '', // TODO: Получить email из текстового поля
                           'operation': ConfirmOperationsConstants.confirmEmail,
                         },
                       );
@@ -45,36 +45,39 @@ class RegisterView extends StatelessWidget {
                       children: [
                         RegisterWidget(
                           onUsernameChanged: (value) {
-                            context.read<RegisterBloc>().add(
-                              UpdateUsername(value),
-                            );
+                            // Сохраняем username для регистрации
                           },
                           onEmailChanged: (value) {
-                            context.read<RegisterBloc>().add(
-                              UpdateEmail(value),
-                            );
+                            // Сохраняем email для регистрации
                           },
                           onPasswordChanged: (value) {
-                            context.read<RegisterBloc>().add(
-                              UpdatePassword(value),
-                            );
+                            // Сохраняем пароль для регистрации
                           },
                           onPasswordConfirmChanged: (value) {
-                            context.read<RegisterBloc>().add(
-                              UpdatePasswordConfirm(value),
-                            );
+                            // Сохраняем подтверждение пароля для регистрации
                           },
                           onRoleToggled: (value) {
-                            context.read<RegisterBloc>().add(ToggleRole(value));
+                            // Сохраняем роль пользователя
                           },
-                          isLoading: state is RegisterLoading,
+                          isLoading: state is AuthLoading,
                           errorMessage:
-                              state is RegisterFailure
-                                  ? state.errorMessage
-                                  : null,
+                          state is AuthError ? state.message : null,
                           onRegisterPressed: () {
-                            context.read<RegisterBloc>().add(
-                              PerformRegistration(),
+                            final username = ''; // TODO: Получить username из текстового поля
+                            final email = ''; // TODO: Получить email из текстового поля
+                            final password = ''; // TODO: Получить пароль из текстового поля
+                            final confirmPassword = ''; // TODO: Получить подтверждение пароля из текстового поля
+                            final isAuthor = false; // TODO: Получить роль из переключателя
+
+                            // Вызываем событие регистрации через AuthBloc
+                            context.read<AuthBloc>().add(
+                              Registered(
+                                username: username,
+                                email: email,
+                                password: password,
+                                confirmPassword: confirmPassword,
+                                isAuthor: isAuthor,
+                              ),
                             );
                           },
                         ),

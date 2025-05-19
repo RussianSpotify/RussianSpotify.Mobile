@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:russian_spotify_project/core/utils/confirm_operations_constants.dart';
-import 'package:russian_spotify_project/presentation/blocs/confirmation/confirmation_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/confirmation/confirmation_event.dart';
-import 'package:russian_spotify_project/presentation/blocs/confirmation/confirmation_state.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_state.dart';
 import '../widgets/auth/header_widget.dart';
 
 class ConfirmationView extends StatelessWidget {
@@ -19,25 +18,17 @@ class ConfirmationView extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: BlocConsumer<ConfirmationBloc, ConfirmationState>(
+              child: BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   // Обработка навигации при успешном подтверждении
-                  if (state is ConfirmationSuccess) {
+                  if (state is Authenticated) {
                     Navigator.pushReplacementNamed(context, '/login');
                   }
                 },
                 builder: (context, state) {
-                  if (state is ConfirmationInitial) {
-                    // Инициализация данных из контекста
-                    context.read<ConfirmationBloc>().add(
-                      InitializeFromContext(context),
-                    );
+                  if (state is AuthLoading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is ConfirmationLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is ConfirmationLoaded) {
-                    return _buildConfirmationForm(context, state);
-                  } else if (state is ConfirmationError) {
+                  } else if (state is AuthError) {
                     return Center(
                       child: Text(
                         state.message,
@@ -45,12 +36,8 @@ class ConfirmationView extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return const Center(
-                      child: Text(
-                        'Unknown state',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    );
+                    // Инициализация данных из контекста
+                    return _buildConfirmationForm(context);
                   }
                 },
               ),
@@ -61,16 +48,11 @@ class ConfirmationView extends StatelessWidget {
     );
   }
 
-  Widget _buildConfirmationForm(
-    BuildContext context,
-    ConfirmationLoaded state,
-  ) {
+  Widget _buildConfirmationForm(BuildContext context) {
     return Column(
       children: [
         Text(
-          state.operation == ConfirmOperationsConstants.confirmEmail
-              ? 'Please enter the confirmation code sent to your email.'
-              : 'Please enter the confirmation code sent to your email to reset your password.',
+          'Please enter the confirmation code sent to your email.',
           style: const TextStyle(fontSize: 16, color: Colors.white),
         ),
         const SizedBox(height: 20),
@@ -80,7 +62,7 @@ class ConfirmationView extends StatelessWidget {
             labelStyle: TextStyle(color: Colors.white),
           ),
           onChanged: (value) {
-            context.read<ConfirmationBloc>().add(UpdateConfirmationCode(value));
+            // Сохраняем код подтверждения
           },
           keyboardType: TextInputType.number,
           style: const TextStyle(color: Colors.white),
@@ -88,7 +70,16 @@ class ConfirmationView extends StatelessWidget {
         const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            context.read<ConfirmationBloc>().add(HandleConfirmClick(context));
+            // Получаем введенные данные из текстового поля
+            final confirmationCode = ''; // TODO: Получить код подтверждения из TextField
+
+            // Вызываем событие подтверждения через AuthBloc
+            context.read<AuthBloc>().add(
+              ConfirmEmail(
+                email: '', // TODO: Получить email из контекста или параметров
+                confirmationCode: confirmationCode,
+              ),
+            );
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.purple,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/auth/auth_state.dart';
 import 'music_player_bloc.dart';
 import 'music_player_event.dart';
 import 'music_player_state.dart';
@@ -9,26 +11,45 @@ class MusicPlayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Material(
-        elevation: 4, // Добавляем тень для визуального разделения
-        child: Container(
-          color: Colors.black.withAlpha(230), // Темный фон
-          padding: const EdgeInsets.only(bottom: 10),
-          child: SafeArea(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildSongInfo(context),
-                _buildControlsRow(context),
-              ],
-            ),
-          ),
-        ),
-      ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, authState) {
+        // Проверяем, залогинен ли пользователь
+        final isAuthenticated = authState is Authenticated;
+
+        return BlocBuilder<AudioPlayerBloc, AudioPlayerState>(
+          builder: (context, playerState) {
+            // Проверяем, играет ли музыка
+            final isPlaying = playerState is AudioPlayerPlaying;
+
+            // Если пользователь не залогинен или музыка не играет, скрываем виджет
+            if (!isAuthenticated || !isPlaying) {
+              return const SizedBox.shrink(); // Возвращаем пустой виджет
+            }
+
+            return Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Material(
+                elevation: 4, // Добавляем тень для визуального разделения
+                child: Container(
+                  color: Colors.black.withAlpha(230), // Темный фон
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: SafeArea(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildSongInfo(context),
+                        _buildControlsRow(context),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
