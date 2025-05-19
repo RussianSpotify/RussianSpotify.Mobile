@@ -6,6 +6,7 @@ import 'package:russian_spotify_project/data/repositories/playlist_repository_im
 import 'package:russian_spotify_project/data/repositories/settings_repository_impl.dart';
 import 'package:russian_spotify_project/data/repositories/song_repository_impl.dart';
 import 'package:russian_spotify_project/data/repositories/subscription_repository_impl.dart';
+import 'package:russian_spotify_project/data/repositories/user_repository_impl.dart';
 import 'package:russian_spotify_project/data/services/graphql_service.dart';
 import 'package:russian_spotify_project/domain/interfaces/album_repository.dart';
 import 'package:russian_spotify_project/domain/interfaces/auth_repository.dart';
@@ -125,6 +126,9 @@ void setupLocator() {
   );
 
   // User Profile
+  locator.registerLazySingleton<UserRepository>(
+        () => UserRepositoryImpl( baseUrl: "http://192.168.56.1:80"),
+  );
   locator.registerLazySingleton<SongRepository>(
     () => SongRepositoryImpl(locator<GraphQlService>()),
   );

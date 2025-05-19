@@ -30,8 +30,8 @@ class Song {
       duration: json['duration'].toDouble(),
       playsNumber: json['playsNumber'],
       category: Category.fromJson(json['category']),
-      imageFileId: json['imageFileId'] != null ? json['imageFileId'] : null,
-      songFileId: json['songFileId'] != null ? json['songFileId'] : null,
+      imageFileId: json['imageFileId'],
+      songFileId: json['songFileId'],
       authors:
           (json['authors'] as List)
               .map((authorJson) => Author.fromJson(authorJson))

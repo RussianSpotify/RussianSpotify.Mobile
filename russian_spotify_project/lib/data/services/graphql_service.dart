@@ -1,7 +1,7 @@
 import 'package:graphql/client.dart';
 
 class GraphQlService {
-  static final HttpLink _httpLink = HttpLink('http://localhost:5271/graphql');
+  static final HttpLink _httpLink = HttpLink('http://192.168.56.1:56807/graphql');
 
   static final GraphQLClient _client = GraphQLClient(
     link: _httpLink,

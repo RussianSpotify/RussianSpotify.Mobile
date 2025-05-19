@@ -15,7 +15,8 @@ import 'package:russian_spotify_project/presentation/blocs/settings/settings_blo
 import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
 import 'package:russian_spotify_project/presentation/navigation/app_router.dart';
-import 'package:russian_spotify_project/presentation/widgets/music_player_widget.dart';
+import 'package:russian_spotify_project/presentation/widgets/music_player/music_player_bloc.dart';
+import 'package:russian_spotify_project/presentation/widgets/music_player/music_player_widget.dart';
 
 import 'core/di/locator.dart';
 import 'core/utils/app_routes.dart';
@@ -48,6 +49,7 @@ void main() {
           create: (_) => locator<UserProfileBloc>(),
         ),
         BlocProvider<HomeBloc>(create: (_) => locator<HomeBloc>()),
+        BlocProvider<AudioPlayerBloc>(create: (_) => AudioPlayerBloc()),
       ],
       child: const MyApp(),
     ),
@@ -70,14 +72,16 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
-        initialRoute: AppRoutes.profile,
+        initialRoute: AppRoutes.login,
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) {
-          return Stack(
-            children: [
-              child!,
-              const MusicPlayerWidget(), // Добавляем плеер на экран
-            ],
+          return Scaffold(
+            body: Stack(
+              children: [
+                child!, // Основной контент приложения
+                const MusicPlayerWidget(), // Добавляем плеер на экран
+              ],
+            ),
           );
         },
       ),
