@@ -1,68 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:russian_spotify_project/presentation/views/layout/main_scaffold.dart';
-
-import '../viewmodels/settings_viewmodel.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/settings/settings_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/settings/settings_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/settings/settings_state.dart';
+import '../views/layout/main_scaffold.dart';
 
 class PersonalSettingsWidget extends StatelessWidget {
   const PersonalSettingsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<SettingsViewModel>();
-
-    return MainScaffold(
-      appBar: AppBar(
-        title: const Text('Personal Settings'),
-        backgroundColor: Colors.purple,
-      ),
-      body: Container(
-        color: Colors.black, // Устанавливаем чёрный фон для всего тела страницы
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UserInfoTile(
-              text: 'Your username',
-              value: viewModel.username,
-              textStyle: TextStyle(
-                color: Colors.purple,
-                fontSize: 25,
-                decoration: TextDecoration.none,
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        if (state is SettingsLoaded) {
+          return MainScaffold(
+            appBar: AppBar(
+              title: const Text('Personal Settings'),
+              backgroundColor: Colors.purple,
+            ),
+            body: Container(
+              color: Colors.black,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  UserInfoTile(
+                    text: 'Your username',
+                    value: state.username,
+                    textStyle: const TextStyle(
+                      color: Colors.purple,
+                      fontSize: 25,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  UserInfoTile(
+                    text: 'Your email',
+                    value: state.email,
+                    textStyle: const TextStyle(
+                      color: Colors.purple,
+                      fontSize: 25,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () => _showEditDialog(context, state),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text("Edit your info"),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            UserInfoTile(
-              text: 'Your email',
-              value: viewModel.email,
-              textStyle: TextStyle(
-                color: Colors.purple,
-                fontSize: 25,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: ElevatedButton(
-                onPressed: () => _showEditDialog(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  foregroundColor: Colors.white,
-                ),
-                child: const Text("Edit your info"),
-              ),
-            ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
-  void _showEditDialog(BuildContext context) {
-    final viewModel = context.read<SettingsViewModel>();
-    final usernameController = TextEditingController(text: viewModel.username);
-    final emailController = TextEditingController(text: viewModel.email);
-    final passwordController = TextEditingController();
+  void _showEditDialog(BuildContext context, SettingsLoaded state) {
+    final usernameController = TextEditingController(text: state.username);
+    final emailController = TextEditingController(text: state.email);
 
     showDialog(
       context: context,
@@ -76,7 +81,7 @@ class PersonalSettingsWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   controller: usernameController,
                   decoration: const InputDecoration(
                     labelText: "Username",
@@ -84,24 +89,16 @@ class PersonalSettingsWidget extends StatelessWidget {
                   ),
                 ),
                 TextField(
-                  style: TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.white),
                   controller: emailController,
                   decoration: const InputDecoration(
                     labelText: "Email",
                     labelStyle: TextStyle(color: Colors.white),
                   ),
                 ),
-                TextField(
-                  style: TextStyle(color: Colors.white),
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    labelText: "Password",
-                    labelStyle: TextStyle(color: Colors.white),
-                  ),
-                ),
               ],
             ),
-            backgroundColor: Color(0xFF300B44),
+            backgroundColor: const Color(0xFF300B44),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
@@ -109,9 +106,11 @@ class PersonalSettingsWidget extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  viewModel.updateUserInfo(
-                    usernameController.text,
-                    emailController.text,
+                  context.read<SettingsBloc>().add(
+                    UpdateUserInfo(
+                      usernameController.text,
+                      emailController.text,
+                    ),
                   );
                   Navigator.of(context).pop();
                 },

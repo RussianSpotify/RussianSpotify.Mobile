@@ -1,14 +1,58 @@
+import 'package:russian_spotify_project/domain/entities/author_entity.dart';
+import 'package:russian_spotify_project/domain/entities/category_entity.dart';
+
 class Song {
-  final String title;
-  final String artist;
+  final String id;
+  final String songName;
+  final double duration;
+  final int playsNumber;
+  final Category category;
+  final String? imageFileId;
+  final String? songFileId;
+  final List<Author> authors;
 
-  Song({required this.title, required this.artist});
+  Song({
+    required this.id,
+    required this.songName,
+    required this.duration,
+    required this.playsNumber,
+    required this.category,
+    this.imageFileId,
+    this.songFileId,
+    required this.authors,
+  });
 
-  factory Song.fromMap(Map<String, String> map) {
-    return Song(title: map['title'] ?? '', artist: map['artist'] ?? '');
+  /// Создание объекта из JSON
+  factory Song.fromJson(Map<String, dynamic> json) {
+    return Song(
+      id: json['id'],
+      songName: json['songName'],
+      duration: json['duration'].toDouble(),
+      playsNumber: json['playsNumber'],
+      category: Category.fromJson(json['category']),
+      imageFileId: json['imageFileId'],
+      songFileId: json['songFileId'],
+      authors:
+          (json['authors'] as List)
+              .map((authorJson) => Author.fromJson(authorJson))
+              .toList(),
+    );
   }
 
-  Map<String, String> toMap() {
-    return {'title': title, 'artist': artist};
+  /// Преобразование объекта в JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'songName': songName,
+      'duration': duration,
+      'playsNumber': playsNumber,
+      'category': category.toJson(), // Преобразуем категорию в JSON
+      'imageFileId': imageFileId,
+      'songFileId': songFileId,
+      'authors':
+          authors
+              .map((author) => author.toJson())
+              .toList(), // Преобразуем авторов в JSON
+    };
   }
 }

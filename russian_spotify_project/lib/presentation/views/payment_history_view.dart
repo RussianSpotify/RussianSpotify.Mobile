@@ -1,57 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:russian_spotify_project/presentation/viewmodels/payment_history_viewmodel.dart';
+import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_event.dart';
+import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_state.dart';
 
-class PaymentHistoryView extends StatefulWidget {
+class PaymentHistoryView extends StatelessWidget {
   const PaymentHistoryView({super.key});
 
   @override
-  State<PaymentHistoryView> createState() => _PaymentHistoryViewState();
-}
-
-class _PaymentHistoryViewState extends State<PaymentHistoryView> {
-  @override
   Widget build(BuildContext context) {
-    return Consumer<PaymentHistoryViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.paymentHistory.isEmpty && !viewModel.isLoading) {
-          viewModel.loadPaymentHistory();
-        }
-
-        return Scaffold(
-          backgroundColor: Colors.purple.withValues(alpha: 0.3),
-          appBar: AppBar(
-            title: const Text('Payment History'),
-            backgroundColor: Colors.purple.withValues(alpha: 0.3),
-            foregroundColor: Colors.white,
-          ),
-          body:
-              viewModel.isLoading
-                  ? const Center(
-                    child: CircularProgressIndicator(color: Colors.purple),
-                  )
-                  : ListView.builder(
-                    itemCount: viewModel.paymentHistory.length,
-                    itemBuilder: (context, index) {
-                      final payment = viewModel.paymentHistory[index];
-                      return ListTile(
-                        title: Text(
-                          '\$${payment.amount}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          DateFormat('yyyy-MM-dd HH:mm').format(payment.date),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    },
+    return Scaffold(
+      backgroundColor: Colors.purple.withAlpha(77),
+      appBar: AppBar(
+        title: const Text('Payment History'),
+        backgroundColor: Colors.purple.withAlpha(77),
+        foregroundColor: Colors.white,
+      ),
+      body: BlocConsumer<PaymentHistoryBloc, PaymentHistoryState>(
+        listener: (context, state) {
+          // Дополнительные действия при изменении состояния (если нужны)
+        },
+        builder: (context, state) {
+          if (state is PaymentHistoryInitial) {
+            // Загружаем данные при первом запуске
+            context.read<PaymentHistoryBloc>().add(LoadPaymentHistory());
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.purple),
+            );
+          } else if (state is PaymentHistoryLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.purple),
+            );
+          } else if (state is PaymentHistoryLoaded) {
+            return ListView.builder(
+              itemCount: state.paymentHistory.length,
+              itemBuilder: (context, index) {
+                final payment = state.paymentHistory[index];
+                return ListTile(
+                  title: Text(
+                    '\$${payment.amount}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-        );
-      },
+                  subtitle: Text(
+                    DateFormat('yyyy-MM-dd HH:mm').format(payment.date),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              },
+            );
+          } else if (state is PaymentHistoryError) {
+            return Center(
+              child: Text(
+                state.errorMessage,
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          } else {
+            return const Center(
+              child: Text(
+                'Unknown state',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 }
