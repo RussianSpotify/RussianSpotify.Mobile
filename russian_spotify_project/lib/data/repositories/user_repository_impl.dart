@@ -1,25 +1,40 @@
 import 'package:http/http.dart' as http;
+import 'package:russian_spotify_project/data/services/graphql_service.dart';
 import 'package:russian_spotify_project/domain/entities/user_entity.dart';
 import 'dart:convert';
 
 import 'package:russian_spotify_project/domain/interfaces/user_repository.dart';
 
 class UserRepositoryImpl implements UserRepository {
-  final String baseUrl;
+  final GraphQlService _graphQlService;
 
-  UserRepositoryImpl({required this.baseUrl});
+  UserRepositoryImpl(this._graphQlService);
 
   @override
   Future<User> getUserInfo() async {
-    final response = await http.get(Uri.parse('$baseUrl/api/user'));
+    const String gqlQuery = r'''
+    query GetUser {
+      user {
+        id
+        userName
+        email
+        phone
+        birthday
+      }
+    }
+  ''';
 
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      return User.fromJson(
-        jsonData,
-      ); // Предполагаем, что у нас есть метод fromJson
-    } else {
-      throw Exception('Failed to load user info');
+    try {
+      // Выполняем GraphQL-запрос
+      final Map<String, dynamic> data = await _graphQlService.performQuery(
+        query: gqlQuery,
+      );
+
+      // Извлекаем данные пользователя из ответа
+      final Map<String, dynamic> userJson = data['user'];
+      return User.fromJson(userJson);
+    } catch (e) {
+      throw Exception('Failed to load user info: $e');
     }
   }
 }

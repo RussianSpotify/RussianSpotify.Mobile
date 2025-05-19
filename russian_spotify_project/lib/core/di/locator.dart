@@ -125,7 +125,7 @@ void setupLocator() {
 
   // User Profile
   locator.registerLazySingleton<UserRepository>(
-        () => UserRepositoryImpl(baseUrl: "http://192.168.56.1:80"),
+        () => UserRepositoryImpl(locator<GraphQlService>()),
   );
   locator.registerLazySingleton<SongRepository>(
         () => SongRepositoryImpl(locator<GraphQlService>()),
