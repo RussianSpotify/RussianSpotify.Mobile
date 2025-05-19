@@ -5,8 +5,31 @@ import 'package:russian_spotify_project/presentation/blocs/auth/auth_event.dart'
 import 'package:russian_spotify_project/presentation/blocs/auth/auth_state.dart';
 import '../widgets/auth/header_widget.dart';
 
-class ConfirmationView extends StatelessWidget {
+class ConfirmationView extends StatefulWidget {
   const ConfirmationView({super.key});
+
+  @override
+  State<ConfirmationView> createState() => _ConfirmationViewState();
+}
+
+class _ConfirmationViewState extends State<ConfirmationView> {
+  final TextEditingController _confirmationCodeController = TextEditingController();
+  String? _email;
+
+  @override
+  void initState() {
+    super.initState();
+    // Получаем email из параметров маршрута
+    final route = ModalRoute.of(context);
+    final arguments = route?.settings.arguments as Map<String, String>?;
+    _email = arguments?['email'];
+  }
+
+  @override
+  void dispose() {
+    _confirmationCodeController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,26 +80,30 @@ class ConfirmationView extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         TextField(
+          controller: _confirmationCodeController,
           decoration: const InputDecoration(
             labelText: 'Confirmation Code',
             labelStyle: TextStyle(color: Colors.white),
           ),
-          onChanged: (value) {
-            // Сохраняем код подтверждения
-          },
           keyboardType: TextInputType.number,
           style: const TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 20),
         ElevatedButton(
           onPressed: () {
-            // Получаем введенные данные из текстового поля
-            final confirmationCode = ''; // TODO: Получить код подтверждения из TextField
+            final confirmationCode = _confirmationCodeController.text;
+
+            if (_email == null || confirmationCode.isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Please fill all fields')),
+              );
+              return;
+            }
 
             // Вызываем событие подтверждения через AuthBloc
             context.read<AuthBloc>().add(
               ConfirmEmail(
-                email: '', // TODO: Получить email из контекста или параметров
+                email: _email!,
                 confirmationCode: confirmationCode,
               ),
             );

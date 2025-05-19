@@ -8,8 +8,29 @@ import '../../core/utils/app_routes.dart';
 import '../widgets/auth/register_widget.dart';
 import '../widgets/auth/header_widget.dart';
 
-class RegisterView extends StatelessWidget {
+class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
+  // Контроллеры для текстовых полей
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  bool _isAuthor = false; // Переключатель роли
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +54,7 @@ class RegisterView extends StatelessWidget {
                         context,
                         AppRoutes.confirmation,
                         arguments: {
-                          'email': '', // TODO: Получить email из текстового поля
+                          'email': _emailController.text, // Передаем email из контроллера
                           'operation': ConfirmOperationsConstants.confirmEmail,
                         },
                       );
@@ -45,29 +66,49 @@ class RegisterView extends StatelessWidget {
                       children: [
                         RegisterWidget(
                           onUsernameChanged: (value) {
-                            // Сохраняем username для регистрации
+                            _usernameController.text = value;
                           },
                           onEmailChanged: (value) {
-                            // Сохраняем email для регистрации
+                            _emailController.text = value;
                           },
                           onPasswordChanged: (value) {
-                            // Сохраняем пароль для регистрации
+                            _passwordController.text = value;
                           },
                           onPasswordConfirmChanged: (value) {
-                            // Сохраняем подтверждение пароля для регистрации
+                            _confirmPasswordController.text = value;
                           },
                           onRoleToggled: (value) {
-                            // Сохраняем роль пользователя
+                            setState(() {
+                              _isAuthor = value;
+                            });
                           },
                           isLoading: state is AuthLoading,
                           errorMessage:
                           state is AuthError ? state.message : null,
                           onRegisterPressed: () {
-                            final username = ''; // TODO: Получить username из текстового поля
-                            final email = ''; // TODO: Получить email из текстового поля
-                            final password = ''; // TODO: Получить пароль из текстового поля
-                            final confirmPassword = ''; // TODO: Получить подтверждение пароля из текстового поля
-                            final isAuthor = false; // TODO: Получить роль из переключателя
+                            final username = _usernameController.text;
+                            final email = _emailController.text;
+                            final password = _passwordController.text;
+                            final confirmPassword = _confirmPasswordController.text;
+
+                            // Проверяем, что все поля заполнены
+                            if (username.isEmpty ||
+                                email.isEmpty ||
+                                password.isEmpty ||
+                                confirmPassword.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Please fill all fields')),
+                              );
+                              return;
+                            }
+
+                            // Проверяем, совпадают ли пароли
+                            if (password != confirmPassword) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Passwords don't match")),
+                              );
+                              return;
+                            }
 
                             // Вызываем событие регистрации через AuthBloc
                             context.read<AuthBloc>().add(
@@ -76,7 +117,7 @@ class RegisterView extends StatelessWidget {
                                 email: email,
                                 password: password,
                                 confirmPassword: confirmPassword,
-                                isAuthor: isAuthor,
+                                isAuthor: _isAuthor,
                               ),
                             );
                           },
