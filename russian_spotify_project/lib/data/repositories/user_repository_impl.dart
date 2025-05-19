@@ -1,7 +1,5 @@
-import 'package:http/http.dart' as http;
 import 'package:russian_spotify_project/data/services/graphql_service.dart';
 import 'package:russian_spotify_project/domain/entities/user_entity.dart';
-import 'dart:convert';
 
 import 'package:russian_spotify_project/domain/interfaces/user_repository.dart';
 

@@ -18,8 +18,6 @@ class GraphQlService {
         variables: variables ?? {},
       );
 
-      print(query);
-
       final QueryResult result = await _client.query(options);
 
       if (result.hasException) {
