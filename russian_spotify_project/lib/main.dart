@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grpc/grpc.dart';
 import 'package:provider/provider.dart';
+import 'package:russian_spotify_project/generated/chats.pbgrpc.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
@@ -21,15 +23,22 @@ import 'core/utils/app_routes.dart';
 
 void main() {
   setupLocator();
+
+  final channel = ClientChannel(
+    'localhost',
+    port: 88,
+    options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
+  );
+
+  final chatClient = ChatServiceClient(channel);
+
   runApp(
     MultiProvider(
       providers: [
         BlocProvider<AboutBloc>(
           create: (_) => locator<AboutBloc>()..add(LoadAboutData()),
         ),
-        BlocProvider<AuthBloc>(
-          create: (_) => locator<AuthBloc>(),
-        ),
+        BlocProvider<AuthBloc>(create: (_) => locator<AuthBloc>()),
         BlocProvider<SettingsBloc>(create: (_) => locator<SettingsBloc>()),
         BlocProvider<SubscriptionBloc>(
           create: (_) => locator<SubscriptionBloc>(),
@@ -42,16 +51,20 @@ void main() {
           create: (_) => locator<UserProfileBloc>(),
         ),
         BlocProvider<HomeBloc>(create: (_) => locator<HomeBloc>()),
-        BlocProvider<AudioPlayerBloc>(create: (_) => locator<AudioPlayerBloc>()),
+        BlocProvider<AudioPlayerBloc>(
+          create: (_) => locator<AudioPlayerBloc>(),
+        ),
         BlocProvider<SearchBloc>(create: (_) => locator<SearchBloc>()),
       ],
-      child: const MyApp(),
+      child: MyApp(chatClient: chatClient),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ChatServiceClient chatClient;
+
+  const MyApp({super.key, required this.chatClient});
 
   @override
   Widget build(BuildContext context) {
