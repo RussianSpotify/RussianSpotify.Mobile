@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:russian_spotify_project/presentation/views/about_view.dart';
+import 'package:russian_spotify_project/presentation/views/chat_view.dart';
 import 'package:russian_spotify_project/presentation/views/confirmation_view.dart';
 import 'package:russian_spotify_project/presentation/views/payment_history_view.dart';
 import 'package:russian_spotify_project/presentation/views/playlist_view.dart';
@@ -40,6 +41,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const PlaylistView());
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const UserProfileView());
+      case AppRoutes.chat:
+        return MaterialPageRoute(builder: (_) => const ChatView());
       default:
         return MaterialPageRoute(
           builder:

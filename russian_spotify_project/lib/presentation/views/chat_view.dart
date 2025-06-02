@@ -4,53 +4,46 @@ import 'package:russian_spotify_project/presentation/blocs/chat/chat_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/chat/chat_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/chat/chat_state.dart';
 
-class ChatView extends StatefulWidget {
-  final String receiverId;
-  const ChatView({super.key, required this.receiverId});
-
-  @override
-  State<ChatView> createState() => _ChatViewState();
-}
-
-class _ChatViewState extends State<ChatView> {
-  final _controller = TextEditingController();
+class ChatView extends StatelessWidget {
+  const ChatView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Чат с поддержкой")),
+      appBar: AppBar(
+        title: const Text("Чат"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              context.read<ChatBloc>().add(
+                LoadStory(pageNumber: 1, pageSize: 10),
+              );
+            },
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
             child: BlocBuilder<ChatBloc, ChatState>(
               builder: (context, state) {
-                return ListView(
-                  children:
-                      state.messages.map((msg) {
-                        return ListTile(
-                          title: Text(msg.username),
-                          subtitle: Text(msg.content),
-                        );
-                      }).toList(),
+                if (state.error != null) {
+                  return Center(child: Text('Ошибка: ${state.error}'));
+                }
+
+                return ListView.builder(
+                  itemCount: state.messages.length,
+                  itemBuilder: (context, index) {
+                    final message = state.messages[index];
+                    return ListTile(
+                      title: Text(message.sender),
+                      subtitle: Text(message.message),
+                      trailing: Text('${message.sentDate}'),
+                    );
+                  },
                 );
               },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(child: TextField(controller: _controller)),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: () {
-                    context.read<ChatBloc>().add(
-                      SendMessage(widget.receiverId, _controller.text),
-                    );
-                    _controller.clear();
-                  },
-                ),
-              ],
             ),
           ),
         ],

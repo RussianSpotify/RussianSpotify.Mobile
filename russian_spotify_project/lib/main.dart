@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grpc/grpc.dart';
 import 'package:provider/provider.dart';
-import 'package:russian_spotify_project/generated/chats.pbgrpc.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/chat/chat_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/home/home_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/playlist/playlist_bloc.dart';
@@ -23,14 +22,6 @@ import 'core/utils/app_routes.dart';
 
 void main() {
   setupLocator();
-
-  final channel = ClientChannel(
-    'localhost',
-    port: 88,
-    options: const ChannelOptions(credentials: ChannelCredentials.insecure()),
-  );
-
-  final chatClient = ChatServiceClient(channel);
 
   runApp(
     MultiProvider(
@@ -55,16 +46,15 @@ void main() {
           create: (_) => locator<AudioPlayerBloc>(),
         ),
         BlocProvider<SearchBloc>(create: (_) => locator<SearchBloc>()),
+        BlocProvider<ChatBloc>(create: (_) => locator<ChatBloc>()),
       ],
-      child: MyApp(chatClient: chatClient),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final ChatServiceClient chatClient;
-
-  const MyApp({super.key, required this.chatClient});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +69,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
-        initialRoute: AppRoutes.register,
+        initialRoute: AppRoutes.chat,
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) {
           return Scaffold(

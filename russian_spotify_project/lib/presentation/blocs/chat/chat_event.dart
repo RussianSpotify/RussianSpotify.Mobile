@@ -14,3 +14,10 @@ class ReceiveMessage extends ChatEvent {
 
   ReceiveMessage(this.response);
 }
+
+class LoadStory extends ChatEvent {
+  final int pageNumber;
+  final int pageSize;
+
+  LoadStory({required this.pageNumber, required this.pageSize});
+}
