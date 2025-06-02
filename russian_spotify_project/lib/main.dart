@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
+import 'package:russian_spotify_project/presentation/blocs/chat/chat_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/home/home_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/playlist/playlist_bloc.dart';
@@ -21,15 +22,14 @@ import 'core/utils/app_routes.dart';
 
 void main() {
   setupLocator();
+
   runApp(
     MultiProvider(
       providers: [
         BlocProvider<AboutBloc>(
           create: (_) => locator<AboutBloc>()..add(LoadAboutData()),
         ),
-        BlocProvider<AuthBloc>(
-          create: (_) => locator<AuthBloc>(),
-        ),
+        BlocProvider<AuthBloc>(create: (_) => locator<AuthBloc>()),
         BlocProvider<SettingsBloc>(create: (_) => locator<SettingsBloc>()),
         BlocProvider<SubscriptionBloc>(
           create: (_) => locator<SubscriptionBloc>(),
@@ -42,10 +42,13 @@ void main() {
           create: (_) => locator<UserProfileBloc>(),
         ),
         BlocProvider<HomeBloc>(create: (_) => locator<HomeBloc>()),
-        BlocProvider<AudioPlayerBloc>(create: (_) => locator<AudioPlayerBloc>()),
+        BlocProvider<AudioPlayerBloc>(
+          create: (_) => locator<AudioPlayerBloc>(),
+        ),
         BlocProvider<SearchBloc>(create: (_) => locator<SearchBloc>()),
+        BlocProvider<ChatBloc>(create: (_) => locator<ChatBloc>()),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -66,7 +69,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         ),
-        initialRoute: AppRoutes.register,
+        initialRoute: AppRoutes.chat,
         onGenerateRoute: AppRouter.generateRoute,
         builder: (context, child) {
           return Scaffold(
