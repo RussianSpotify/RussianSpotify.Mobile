@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:russian_spotify_project/core/di/locator.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/about/about_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/about/about_state.dart';
 import 'package:russian_spotify_project/presentation/widgets/about/about_card_widget.dart';
 import 'package:russian_spotify_project/presentation/widgets/about/technology_card_widget.dart';
@@ -12,7 +12,7 @@ class AboutView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => AboutBloc()..add(LoadAboutData()),
+      create: (_) => locator<AboutBloc>(),
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
