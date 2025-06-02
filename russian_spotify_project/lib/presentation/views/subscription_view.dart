@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:russian_spotify_project/core/di/locator.dart';
 import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_state.dart';
@@ -9,48 +10,54 @@ class SubscriptionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SubscriptionBloc, SubscriptionState>(
-      listener: (context, state) {
-        if (state is SubscriptionSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("You've successfully subscribed!")),
-          );
-          Navigator.of(context).pop();
-        } else if (state is SubscriptionFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
-        }
-      },
-      builder: (context, state) {
-        if (state is SubscriptionInitial) {
-          // Загружаем подписки
-          context.read<SubscriptionBloc>().add(LoadSubscriptionOptions());
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is SubscriptionLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (state is SubscriptionLoaded) {
-          return _buildSubscriptionContent(context, state);
-        } else if (state is SubscriptionSuccess) {
-          return const Center(
-            child: Text(
-              "Subscription Successful!",
-              style: TextStyle(color: Colors.white),
-            ),
-          );
-        } else if (state is SubscriptionFailure) {
-          return Center(
-            child: Text(
-              state.errorMessage,
-              style: const TextStyle(color: Colors.red),
-            ),
-          );
-        } else {
-          return const Center(
-            child: Text('Unknown state', style: TextStyle(color: Colors.white)),
-          );
-        }
-      },
+    return BlocProvider(
+      create:
+          (_) =>
+              locator<SubscriptionBloc>()..add(
+                LoadSubscriptionOptions(),
+              ), // Загружаем подписки при старте
+      child: BlocConsumer<SubscriptionBloc, SubscriptionState>(
+        listener: (context, state) {
+          if (state is SubscriptionSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("You've successfully subscribed!")),
+            );
+            Navigator.of(context).pop();
+          } else if (state is SubscriptionFailure) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+          }
+        },
+        builder: (context, state) {
+          if (state is SubscriptionInitial || state is SubscriptionLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is SubscriptionLoaded) {
+            return _buildSubscriptionContent(context, state);
+          } else if (state is SubscriptionSuccess) {
+            return const Center(
+              child: Text(
+                "Subscription Successful!",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          } else if (state is SubscriptionFailure) {
+            return Center(
+              child: Text(
+                state.errorMessage,
+                style: const TextStyle(color: Colors.red),
+              ),
+            );
+          } else {
+            return const Center(
+              child: Text(
+                'Unknown state',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 

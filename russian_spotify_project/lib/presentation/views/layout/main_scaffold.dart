@@ -108,6 +108,13 @@ class MainScaffold extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.chat, color: Colors.white),
+              title: const Text('Chat', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.chat);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.exit_to_app, color: Colors.white),
               title: const Text('Leave', style: TextStyle(color: Colors.white)),
               onTap: () {

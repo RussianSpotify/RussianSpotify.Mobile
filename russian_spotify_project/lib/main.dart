@@ -2,17 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:russian_spotify_project/presentation/blocs/about/about_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/about/about_event.dart';
 import 'package:russian_spotify_project/presentation/blocs/auth/auth_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/chat/chat_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/home/home_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/payment_history/payment_history_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/playlist/playlist_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/search/search_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/settings/settings_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
-import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
 import 'package:russian_spotify_project/presentation/navigation/app_router.dart';
 import 'package:russian_spotify_project/presentation/widgets/music_player/music_player_bloc.dart';
 import 'package:russian_spotify_project/presentation/widgets/music_player/music_player_widget.dart';
@@ -26,27 +16,10 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        BlocProvider<AboutBloc>(
-          create: (_) => locator<AboutBloc>()..add(LoadAboutData()),
-        ),
         BlocProvider<AuthBloc>(create: (_) => locator<AuthBloc>()),
-        BlocProvider<SettingsBloc>(create: (_) => locator<SettingsBloc>()),
-        BlocProvider<SubscriptionBloc>(
-          create: (_) => locator<SubscriptionBloc>(),
-        ),
-        BlocProvider<PaymentHistoryBloc>(
-          create: (_) => locator<PaymentHistoryBloc>(),
-        ),
-        BlocProvider<PlaylistBloc>(create: (_) => locator<PlaylistBloc>()),
-        BlocProvider<UserProfileBloc>(
-          create: (_) => locator<UserProfileBloc>(),
-        ),
-        BlocProvider<HomeBloc>(create: (_) => locator<HomeBloc>()),
         BlocProvider<AudioPlayerBloc>(
           create: (_) => locator<AudioPlayerBloc>(),
         ),
-        BlocProvider<SearchBloc>(create: (_) => locator<SearchBloc>()),
-        BlocProvider<ChatBloc>(create: (_) => locator<ChatBloc>()),
       ],
       child: MyApp(),
     ),

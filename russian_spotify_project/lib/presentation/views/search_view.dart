@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:russian_spotify_project/core/di/locator.dart';
 import 'package:russian_spotify_project/data/dto/song.dart';
 import 'package:russian_spotify_project/presentation/blocs/search/search_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/search/search_event.dart';
@@ -11,16 +12,19 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SearchBloc, SearchState>(
-      listener: (context, state) {
-        // Дополнительные действия при изменении состояния (если нужны)
-      },
-      builder: (context, state) {
-        return MainScaffold(
-          appBar: _buildAppBar(),
-          body: _buildBody(context, state),
-        );
-      },
+    return BlocProvider(
+      create: (_) => locator<SearchBloc>(),
+      child: BlocConsumer<SearchBloc, SearchState>(
+        listener: (context, state) {
+          // Дополнительные действия при изменении состояния (если нужны)
+        },
+        builder: (context, state) {
+          return MainScaffold(
+            appBar: _buildAppBar(),
+            body: _buildBody(context, state),
+          );
+        },
+      ),
     );
   }
 
