@@ -42,10 +42,16 @@ import 'package:russian_spotify_project/presentation/blocs/settings/settings_blo
 import 'package:russian_spotify_project/presentation/blocs/subscription/subscription_bloc.dart';
 import 'package:russian_spotify_project/presentation/blocs/user_profile/user_profile_bloc.dart';
 import 'package:russian_spotify_project/presentation/widgets/music_player/music_player_bloc.dart';
+import 'package:russian_spotify_project/services/song_statistic_service.dart';
 
 final GetIt locator = GetIt.instance;
 
 void setupLocator() {
+  // Song Statistics Service
+  locator.registerLazySingleton<SongStatisticService>(
+    () => SongStatisticService(baseUrl: 'http://10.17.38.213'),
+  );
+
   locator.registerFactory<GraphQlService>(() => GraphQlService());
 
   // Settings
